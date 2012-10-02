@@ -1703,16 +1703,16 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
   #ifndef CONFIGURE_MAXIMUM_POSIX_KEYS
     #define CONFIGURE_MAXIMUM_POSIX_KEYS           0
     #define CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS      0
-    #define CONFIGURE_MEMORY_FOR_POSIX_KEYS(_keys) 0
+    #define CONFIGURE_MEMORY_FOR_POSIX_KEYS(_keys, _key_pairs) 0
   #else
     #ifndef CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS
       #define CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS \
         CONFIGURE_MAXIMUM_POSIX_KEYS \
         * (CONFIGURE_MAXIMUM_POSIX_THREADS + CONFIGURE_MAXIMUM_TASKS)
     #endif
-    #define CONFIGURE_MEMORY_FOR_POSIX_KEYS(_keys)               \
+  #define CONFIGURE_MEMORY_FOR_POSIX_KEYS(_keys, _key_pairs)       \
       (_Configure_Object_RAM(_keys, sizeof(POSIX_Keys_Control) ) \
-      + CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS                        \
+      + _key_pairs                        \
       * _Configure_From_workspace(sizeof(POSIX_Keys_Rbtree_node)))
   #endif
 
@@ -1836,7 +1836,8 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
       CONFIGURE_MEMORY_FOR_POSIX_CONDITION_VARIABLES( \
           CONFIGURE_MAXIMUM_POSIX_CONDITION_VARIABLES + \
           CONFIGURE_MAXIMUM_GO_CHANNELS + CONFIGURE_GO_INIT_CONDITION_VARIABLES) + \
-      CONFIGURE_MEMORY_FOR_POSIX_KEYS( CONFIGURE_MAXIMUM_POSIX_KEYS ) + \
+      CONFIGURE_MEMORY_FOR_POSIX_KEYS( CONFIGURE_MAXIMUM_POSIX_KEYS, \
+                                       CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS ) + \              
       CONFIGURE_MEMORY_FOR_POSIX_QUEUED_SIGNALS( \
           CONFIGURE_MAXIMUM_POSIX_QUEUED_SIGNALS ) + \
       CONFIGURE_MEMORY_FOR_POSIX_MESSAGE_QUEUES( \
@@ -2530,7 +2531,8 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
     CONFIGURE_MEMORY_FOR_POSIX_CONDITION_VARIABLES(
       CONFIGURE_MAXIMUM_POSIX_CONDITION_VARIABLES +
       CONFIGURE_MAXIMUM_GO_CHANNELS + CONFIGURE_GO_INIT_CONDITION_VARIABLES),
-    CONFIGURE_MEMORY_FOR_POSIX_KEYS( CONFIGURE_MAXIMUM_POSIX_KEYS ),
+    CONFIGURE_MEMORY_FOR_POSIX_KEYS( CONFIGURE_MAXIMUM_POSIX_KEYS, \
+                                     CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS ),
     CONFIGURE_MEMORY_FOR_POSIX_QUEUED_SIGNALS(
       CONFIGURE_MAXIMUM_POSIX_QUEUED_SIGNALS ),
     CONFIGURE_MEMORY_FOR_POSIX_MESSAGE_QUEUES(
@@ -2670,6 +2672,15 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
 #if (CONFIGURE_MAXIMUM_POSIX_MESSAGE_QUEUE_DESCRIPTORS < \
      CONFIGURE_MAXIMUM_POSIX_MESSAGE_QUEUES)
   #error "Fewer POSIX Message Queue descriptors than Queues!"
+#endif
+
+/*
+ * POSIX Key pair can't be less than POSIX Key. Because each POSIX
+ * Key should have one Key value instance at least.
+ */
+#if (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS < \
+     CONFIGURE_MAXIMUM_POSIX_KEYS)
+  #error "Fewer POSIX Key pairs than POSIX Key!"
 #endif
 
 #endif
