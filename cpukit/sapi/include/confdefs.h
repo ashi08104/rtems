@@ -2603,6 +2603,7 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
        (CONFIGURE_MAXIMUM_POSIX_MUTEXES != 0) || \
        (CONFIGURE_MAXIMUM_POSIX_CONDITION_VARIABLES != 0) || \
        (CONFIGURE_MAXIMUM_POSIX_KEYS != 0) || \
+       (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS != 0) || \
        (CONFIGURE_MAXIMUM_POSIX_TIMERS != 0) || \
        (CONFIGURE_MAXIMUM_POSIX_QUEUED_SIGNALS != 0) || \
        (CONFIGURE_MAXIMUM_POSIX_MESSAGE_QUEUES != 0) || \
@@ -2675,12 +2676,17 @@ rtems_fs_init_functions_t    rtems_fs_init_helper =
 #endif
 
 /*
- * POSIX Key pair can't be less than POSIX Key. Because each POSIX
- * Key should have one Key value instance at least.
+ * POSIX Key pair shouldn't be less than POSIX Key, which is highly
+ * likely to be error.
  */
-#if (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS < \
-     CONFIGURE_MAXIMUM_POSIX_KEYS)
-  #error "Fewer POSIX Key pairs than POSIX Key!"
+#if defined(RTEMS_POSIX_API)
+    #if (CONFIGURE_MAXIMUM_POSIX_KEYS != 0) && \
+      (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS != 0)
+      #if (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS <=       \
+        CONFIGURE_MAXIMUM_POSIX_KEYS)
+      #error "Fewer POSIX Key pairs than POSIX Key!"
+      #endif
+    #endif
 #endif
 
 #endif
