@@ -51,11 +51,19 @@ int _POSIX_Keys_Rbtree_compare_function(
   const RBTree_Node *node2
 )
 {
-  pthread_key_t key1 = _RBTree_Container_of(node1, POSIX_Keys_Rbtree_node, rb_node)->key;
-  pthread_key_t key2 = _RBTree_Container_of(node2, POSIX_Keys_Rbtree_node, rb_node)->key;
+  pthread_key_t key1 = _RBTree_Container_of(node1, 
+                                            POSIX_Keys_Rbtree_node, 
+                                            rb_node)->key;
+  pthread_key_t key2 = _RBTree_Container_of(node2, 
+                                            POSIX_Keys_Rbtree_node, 
+                                            rb_node)->key;
 
-  Objects_Id thread_id1 = _RBTree_Container_of(node1, POSIX_Keys_Rbtree_node, rb_node)->thread_id;
-  Objects_Id thread_id2 = _RBTree_Container_of(node2, POSIX_Keys_Rbtree_node, rb_node)->thread_id;
+  Objects_Id thread_id1 = _RBTree_Container_of(node1, 
+                                               POSIX_Keys_Rbtree_node, 
+                                               rb_node)->thread_id;
+  Objects_Id thread_id2 = _RBTree_Container_of(node2, 
+                                               POSIX_Keys_Rbtree_node, 
+                                               rb_node)->thread_id;
 
   int diff = key1 - key2;
   if ( diff )
