@@ -8,18 +8,21 @@
  */
 
 /*
- *  COPYRIGHT (c) 1989-2011.
- *  On-Line Applications Research Corporation (OAR).
+ * Copyright (c) 2012 Zhongwei Yao.
+ * COPYRIGHT (c) 1989-2011.
+ * On-Line Applications Research Corporation (OAR).
  *
- *  The license and distribution terms for this file may be
- *  found in the file LICENSE in this distribution or at
- *  http://www.rtems.com/license/LICENSE.
+ * The license and distribution terms for this file may be
+ * found in the file LICENSE in this distribution or at
+ * http://www.rtems.com/license/LICENSE.
  */
 
 #ifndef _RTEMS_POSIX_KEY_H
 #define _RTEMS_POSIX_KEY_H
 
 #include <rtems/score/object.h>
+#include <rtems/score/rbtree.h>
+#include <rtems/score/chain.h>
 
 /**
  * @defgroup POSIX_KEY POSIX Key
@@ -34,25 +37,40 @@ extern "C" {
 #endif
 
 /**
- * This is the data Structure used to manage a POSIX key.
- *
- * NOTE: The Values is a table indexed by the index portion of the
- *       ID of the currently executing thread.
+ * @brief The rbtree node used to manage a POSIX key and value.
+ */
+typedef struct {
+  /** This field is the chain node structure. */
+  Chain_Node ch_node;
+  /** This field is the rbtree node structure. */
+  RBTree_Node rb_node;
+  /** This field is the POSIX key used as an rbtree key */
+  pthread_key_t key;
+  /** This field is the Thread id also used as an rbtree key */
+  Objects_Id thread_id;
+  /** This field points to the POSIX key value of specific thread */
+  void *value;
+ }  POSIX_Keys_Rbtree_node;
+
+/**
+ * @brief The data structure used to manage a POSIX key.
  */
 typedef struct {
    /** This field is the Object control structure. */
    Objects_Control     Object;
-   /** This field points to the optional destructor method. */
-   void              (*destructor)( void * );
-   /** This field points to the values per thread. */
-   void              **Values[ OBJECTS_APIS_LAST + 1 ];
-}  POSIX_Keys_Control;
+   /** This field is the data destructor. */
+   void (*destructor) (void *);
+ }  POSIX_Keys_Control;
 
 /**
- * The following defines the information control block used to manage
- * this class of objects.
+ * @brief The information control block used to manage this class of objects.
  */
 POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
+
+/**
+ * @brief The rbtree control block used to manage all key values
+ */
+POSIX_EXTERN RBTree_Control _POSIX_Keys_Rbtree;
 
 /**
  * @brief POSIX keys manager initialization.
@@ -60,6 +78,16 @@ POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
  * This routine performs the initialization necessary for this manager.
  */
 void _POSIX_Key_Manager_initialization(void);
+
+/**
+ * @brief POSIX keys Red-Black tree node comparison.
+ *
+ * This routine compares the rbtree node
+ */
+int _POSIX_Keys_Rbtree_compare_function(
+  const RBTree_Node *node1,
+  const RBTree_Node *node2
+);
 
 /**
  * @brief Create thread-specific data POSIX key.

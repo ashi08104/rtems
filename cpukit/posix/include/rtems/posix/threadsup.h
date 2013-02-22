@@ -21,6 +21,7 @@
 #include <sys/signal.h>
 #include <rtems/score/coresem.h>
 #include <rtems/score/tqdata.h>
+#include <rtems/score/chain.h>
 
 /**
  *  @defgroup POSIX_THREAD POSIX Thread API Extension
@@ -78,6 +79,15 @@ typedef struct {
   int                     cancelation_requested;
   /** This is the set of cancelation handlers. */
   Chain_Control           Cancellation_Handlers;
+
+  /**
+   * This is the thread key value chain's control, which is used
+   * to track all key value for specific thread, and when thread
+   * exits, we can remove all key value for specific thread by
+   * iterating this chain, or we have to search a whole rbtree,
+   * which is inefficient.
+   */
+  Chain_Control           Key_Chain;
 
 } POSIX_API_Control;
 
