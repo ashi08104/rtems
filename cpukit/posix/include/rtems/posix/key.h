@@ -42,6 +42,11 @@ extern "C" {
 typedef struct {
   /** This field is the chain node structure. */
   Chain_Node ch_node;
+  /** 
+   * This field is the chain node, which is
+   * used in pre-allocated key node chain.
+   */
+  Chain_Node pre_ch_node;
   /** This field is the rbtree node structure. */
   RBTree_Node rb_node;
   /** This field is the POSIX key used as an rbtree key */
@@ -71,6 +76,12 @@ POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
  * @brief The rbtree control block used to manage all key values
  */
 POSIX_EXTERN RBTree_Control _POSIX_Keys_Rbtree;
+
+/**
+ * @brief This chain is used in _POSIX_Keys_Preallocation, it contains all
+ * pre-allocated RBTree_Nodes.
+ */
+POSIX_EXTERN Chain_Control _POSIX_Keys_Preallocation_chain;
 
 /**
  * @brief POSIX keys manager initialization.

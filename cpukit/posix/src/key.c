@@ -31,6 +31,23 @@
 #include <rtems/score/wkspace.h>
 #include <rtems/posix/key.h>
 #include <rtems/score/rbtree.h>
+#include <rtems/score/chain.h>
+
+/**
+ * @brief This routine pre-allocates the memory used for all key data.
+ */
+void _POSIX_Keys_Preallocation(void)
+{
+  POSIX_Keys_Rbtree_node *rb_node;
+  int i;
+
+  _Chain_Initialize_empty( &_POSIX_Keys_Preallocation_chain );
+
+  for ( i = 0; i < Configuration_POSIX_API.maximum_key_pairs; ++i ) {
+    rb_node = _Workspace_Allocate( sizeof( POSIX_Keys_Rbtree_node ) );
+    _Chain_Append( &_POSIX_Keys_Preallocation_chain, &rb_node->pre_ch_node );
+  }
+}
 
 /**
  * @brief This routine compares the rbtree node by comparing POSIX key first
@@ -104,4 +121,6 @@ void _POSIX_Key_Manager_initialization(void)
       _POSIX_Keys_Rbtree_compare_function,
       true
   );
+  
+  _POSIX_Keys_Preallocation();
 }
