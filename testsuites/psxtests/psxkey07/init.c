@@ -56,7 +56,7 @@ void *POSIX_Init(
   void *ignored
 )
 {
-  pthread_t        thread_p;
+  pthread_t        thread;
   int              sc;
   struct timespec  delay_request;
 

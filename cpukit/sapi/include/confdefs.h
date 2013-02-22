@@ -2705,7 +2705,7 @@ const rtems_libio_helper rtems_fs_init_helper =
 #if defined(RTEMS_POSIX_API)
     #if (CONFIGURE_MAXIMUM_POSIX_KEYS != 0) && \
       (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS != 0)
-      #if (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS <=       \
+      #if (CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS < \
         CONFIGURE_MAXIMUM_POSIX_KEYS)
       #error "Fewer POSIX Key pairs than POSIX Key!"
       #endif

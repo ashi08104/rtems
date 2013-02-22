@@ -17,7 +17,7 @@ LINK_OBJS = $(psxkey07_OBJECTS)
 LINK_LIBS = $(psxkey07_LDLIBS)
 
 psxkey07$(EXEEXT): $(psxkey07_OBJECTS) $(psxkey07_DEPENDENCIES)
-               @rm -f psxkey07$(EXEEXT)
-               $(make-exe)
+	@rm -f psxkey07$(EXEEXT)
+	$(make-exe)
 
 include $(top_srcdir)/../automake/local.am
