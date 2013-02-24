@@ -33,21 +33,8 @@
 #include <rtems/score/rbtree.h>
 #include <rtems/score/chain.h>
 
-/**
- * @brief This routine pre-allocates the memory used for all key data.
- */
-void _POSIX_Keys_Preallocation(void)
-{
-  POSIX_Keys_Rbtree_node *rb_node;
-  int i;
-
-  _Chain_Initialize_empty( &_POSIX_Keys_Preallocation_chain );
-
-  for ( i = 0; i < Configuration_POSIX_API.maximum_key_pairs; ++i ) {
-    rb_node = _Workspace_Allocate( sizeof( POSIX_Keys_Rbtree_node ) );
-    _Chain_Append( &_POSIX_Keys_Preallocation_chain, &rb_node->pre_ch_node );
-  }
-}
+/* forward declarations to avoid warnings */
+void _POSIX_Keys_Keypool_init(void);
 
 /**
  * @brief This routine compares the rbtree node by comparing POSIX key first
@@ -94,6 +81,27 @@ int _POSIX_Keys_Rbtree_compare_function(
   return 0;
 }
 
+/*
+ * _POSIX_Keys_Keypool_init
+ *
+ * DESCRIPTION:
+ *
+ * This routine does keypool initialize, keypool contains all
+ * POSIX_Keys_Rbtree_node
+ *
+ * Input parameters: NONE
+ *
+ * Output parameters: NONE
+ */
+
+void _POSIX_Keys_Keypool_init(void)
+{
+  freelist_initialize( &_POSIX_Keys_Keypool,
+                       sizeof(POSIX_Keys_Rbtree_node),
+                       10,/*TODO bump_count should be tuned.*/
+                       0 ); /*TODO the callout is not set yet*/
+}
+
 /**
  * @brief This routine performs the initialization necessary for this manager.
  */
@@ -121,6 +129,6 @@ void _POSIX_Key_Manager_initialization(void)
       _POSIX_Keys_Rbtree_compare_function,
       true
   );
-  
-  _POSIX_Keys_Preallocation();
+
+  _POSIX_Keys_Keypool_init();
 }

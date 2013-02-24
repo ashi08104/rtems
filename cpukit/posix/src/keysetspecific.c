@@ -50,11 +50,8 @@ int pthread_setspecific(
   switch ( location ) {
 
     case OBJECTS_LOCAL:
-      ch_node = _Chain_Get_unprotected( &_POSIX_Keys_Preallocation_chain );
-      /* there is no _Chain_Container_of in RTEMS Chain API */
-      rb_node = ( POSIX_Keys_Rbtree_node * ) \
-        ( ( uintptr_t )( ch_node ) \
-          - offsetof( POSIX_Keys_Rbtree_node, pre_ch_node ) );
+      rb_node = ( POSIX_Keys_Rbtree_node * )
+        freelist_get_node( &_POSIX_Keys_Keypool );
       if ( !rb_node ) {
         _Thread_Enable_dispatch();
         return ENOMEM;
@@ -63,13 +60,12 @@ int pthread_setspecific(
       rb_node->key = key;
       rb_node->thread_id = _Thread_Executing->Object.id;
       rb_node->value = value;
-      if (_RBTree_Insert_unprotected( &_POSIX_Keys_Rbtree,
-                                     &(rb_node->rb_node) ) ) {
-	  _Chain_Append_unprotected( &_POSIX_Keys_Preallocation_chain, 
-                                     ch_node );
-          _Thread_Enable_dispatch();
-          return EAGAIN;
-        }
+      if ( _RBTree_Insert_unprotected( &_POSIX_Keys_Rbtree,
+                                       &(rb_node->rb_node) ) ) {
+        freelist_put_node( &_POSIX_Keys_Keypool, ( void * ) rb_node);
+        _Thread_Enable_dispatch();
+        return EAGAIN;
+      }
 
       /** append rb_node to the thread API extension's chain */
       api = (POSIX_API_Control *)\

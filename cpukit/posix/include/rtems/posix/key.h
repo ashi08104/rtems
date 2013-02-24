@@ -1,6 +1,6 @@
 /**
  * @file
- * 
+ *
  * @brief POSIX Key Private Support
  *
  * This include file contains all the private support information for
@@ -23,12 +23,13 @@
 #include <rtems/score/object.h>
 #include <rtems/score/rbtree.h>
 #include <rtems/score/chain.h>
+#include <rtems/score/freelist.h>
 
 /**
  * @defgroup POSIX_KEY POSIX Key
  *
  * @ingroup POSIXAPI
- * 
+ *
  */
 /**@{**/
 
@@ -42,11 +43,6 @@ extern "C" {
 typedef struct {
   /** This field is the chain node structure. */
   Chain_Node ch_node;
-  /** 
-   * This field is the chain node, which is
-   * used in pre-allocated key node chain.
-   */
-  Chain_Node pre_ch_node;
   /** This field is the rbtree node structure. */
   RBTree_Node rb_node;
   /** This field is the POSIX key used as an rbtree key */
@@ -78,13 +74,12 @@ POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
 POSIX_EXTERN RBTree_Control _POSIX_Keys_Rbtree;
 
 /**
- * @brief This chain is used in _POSIX_Keys_Preallocation, it contains all
- * pre-allocated RBTree_Nodes.
+ * @brief This freelist is used as a memory pool for POSIX_Keys_Rbtree_node.
  */
-POSIX_EXTERN Chain_Control _POSIX_Keys_Preallocation_chain;
+POSIX_EXTERN Freelist_Control _POSIX_Keys_Keypool;
 
 /**
- * @brief POSIX keys manager initialization.
+ * @brief POSIX key manager initialization.
  *
  * This routine performs the initialization necessary for this manager.
  */
@@ -106,7 +101,7 @@ int _POSIX_Keys_Rbtree_compare_function(
  * This function executes all the destructors associated with the thread's
  * keys.  This function will execute until all values have been set to NULL.
  *
- * @param[in] thread is a pointer to the thread whose keys should have 
+ * @param[in] thread is a pointer to the thread whose keys should have
  *            all their destructors run.
  *
  * NOTE: This is the routine executed when a thread exits to
