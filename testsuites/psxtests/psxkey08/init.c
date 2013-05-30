@@ -97,7 +97,7 @@ rtems_task Init(rtems_task_argument arg)
              RTEMS_DEFAULT_ATTRIBUTES,
              task_id_p
              );
-      rtems_test_assert( (sc == RTEMS_SUCCESSFUL) || (sc == RTEMS_UNSATISFIED) );
+      rtems_test_assert( (sc == RTEMS_SUCCESSFUL) || (sc == RTEMS_TOO_MANY) );
       /**
        * when return is RTEMS_TOO_MANY or RTEMS_UNSATISFIED, there is not
        * enough source to create task.
@@ -150,7 +150,7 @@ rtems_task Init(rtems_task_argument arg)
 
 #define CONFIGURE_MAXIMUM_TASKS rtems_resource_unlimited(5)
 #define CONFIGURE_MAXIMUM_SEMAPHORES 2
-#define CONFIGURE_MAXIMUM_POSIX_KEYS     1
+#define CONFIGURE_MAXIMUM_POSIX_KEYS 1
 
 #define CONFIGURE_INIT_TASK_INITIAL_MODES \
   (RTEMS_PREEMPT | RTEMS_NO_TIMESLICE | RTEMS_ASR | RTEMS_INTERRUPT_LEVEL(0))
