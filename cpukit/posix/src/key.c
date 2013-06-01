@@ -98,7 +98,7 @@ void _POSIX_Keys_Keypool_init(void)
 {
   freelist_initialize( &_POSIX_Keys_Keypool,
                        sizeof(POSIX_Keys_Rbtree_node),
-                       10,/*TODO bump_count should be tuned.*/
+                       1,/*TODO bump_count should be tuned.*/
                        0 ); /*TODO the callout is not set yet*/
 }
 
