@@ -1,3 +1,17 @@
+/**
+ * @file
+ *
+ * @ingroup ScoreFreelist
+ *
+ * @brief Freelist Handler API
+ */
+/*
+ * Copyright (c) 2013 Gedare Bloom.
+ *
+ * The license and distribution terms for this file may be
+ * found in the file LICENSE in this distribution or at
+ * http://www.rtems.com/license/LICENSE.
+ */
 
 #include <rtems/score/freelist.h>
 
@@ -7,7 +21,7 @@ void freelist_initialize(
     size_t bump_count,
     freelist_callout callout
 ) {
-  _Chain_Initialize_empty( &fc->freelist );
+  _Chain_Initialize_empty( &fc->Freelist );
   fc->node_size = node_size;
   fc->bump_count = bump_count;
   fc->free_count = 0;
@@ -34,7 +48,7 @@ size_t freelist_bump(Freelist_Control *fc)
 
   fc->free_count += count;
   for ( i = 0; i < count; i++ ) {
-    _Chain_Append_unprotected( &fc->freelist, (size_t)nodes+i*size );
+    _Chain_Append_unprotected( &fc->Freelist, (size_t)nodes+i*size );
   }
   fc->callout(fc, nodes);
   return count;
@@ -47,11 +61,11 @@ void *freelist_get_node(Freelist_Control *fc) {
     }
   }
   fc->free_count--;
-  return _Chain_Get_first_unprotected( &fc->freelist );
+  return _Chain_Get_first_unprotected( &fc->Freelist );
 }
 
 void freelist_put_node(Freelist_Control *fc, void *n) {
-  _Chain_Prepend_unprotected( &fc->freelist, n );
+  _Chain_Prepend_unprotected( &fc->Freelist, n );
   fc->free_count++;
 }
 
