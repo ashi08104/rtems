@@ -97,7 +97,7 @@ rtems_task Init(rtems_task_argument arg)
              RTEMS_DEFAULT_ATTRIBUTES,
              task_id_p
              );
-      rtems_test_assert( (sc == RTEMS_SUCCESSFUL) || (sc == RTEMS_UNSATISFIED) );
+      rtems_test_assert( (sc == RTEMS_SUCCESSFUL) || (sc == RTEMS_TOO_MANY) );
       /**
        * when return is RTEMS_TOO_MANY or RTEMS_UNSATISFIED, there is not
        * enough source to create task.
