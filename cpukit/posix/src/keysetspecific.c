@@ -51,7 +51,7 @@ int pthread_setspecific(
 
     case OBJECTS_LOCAL:
       rb_node = ( POSIX_Keys_Rbtree_node * )
-        freelist_get_node( &_POSIX_Keys_Keypool );
+        _Freelist_Get_node( &_POSIX_Keys_Keypool );
       if ( !rb_node ) {
         _Thread_Enable_dispatch();
         return ENOMEM;
@@ -62,7 +62,7 @@ int pthread_setspecific(
       rb_node->value = value;
       if ( _RBTree_Insert_unprotected( &_POSIX_Keys_Rbtree,
                                        &(rb_node->rb_node) ) ) {
-        freelist_put_node( &_POSIX_Keys_Keypool, ( void * ) rb_node);
+        _Freelist_Put_node( &_POSIX_Keys_Keypool, ( void * ) rb_node);
         _Thread_Enable_dispatch();
         return EAGAIN;
       }

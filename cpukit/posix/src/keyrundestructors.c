@@ -89,7 +89,7 @@ void _POSIX_Keys_Run_destructors(
      * to ( void * ) directly for ch_node if the first member of
      * POSIX_Keys_Rbtree_node structure.
      */
-    freelist_put_node( &_POSIX_Keys_Keypool,
+    _Freelist_Put_node( &_POSIX_Keys_Keypool,
                        ( void * ) iter);
     iter = next;
   }

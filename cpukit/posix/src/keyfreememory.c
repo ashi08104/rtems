@@ -59,7 +59,7 @@ void _POSIX_Keys_Free_memory(
     _Chain_Extract_unprotected( &p->ch_node );
     _Workspace_Free( p );
     /* append the node to _POSIX_Keys_Keypool */
-    freelist_put_node( &_POSIX_Keys_Keypool,
+    _Freelist_Put_node( &_POSIX_Keys_Keypool,
                        ( void * ) p);
     iter = next;
     p = _RBTree_Container_of( iter, POSIX_Keys_Rbtree_node, rb_node );

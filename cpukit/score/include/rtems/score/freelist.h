@@ -76,7 +76,7 @@ struct Freelist_Control_struct {
  * @param[in] callout is the function called on all nodes in freelist_bump,
  * if it's null, a default function is set.
  */
-void freelist_initialize(
+void _Freelist_Initialize(
   Freelist_Control *fc,
   size_t node_size,
   size_t bump_count,
@@ -88,7 +88,7 @@ void freelist_initialize(
  *
  * @param[in] fc specifies the freelist to bump
  */
-size_t freelist_bump(
+size_t _Freelist_Bump(
   Freelist_Control* fc
 );
 
@@ -99,7 +99,7 @@ size_t freelist_bump(
  *
  * @retval the point to node is return if success, return null if failed.
  */
-void *freelist_get_node(
+void *_Freelist_Get_node(
   Freelist_Control *fc
 );
 
@@ -109,7 +109,7 @@ void *freelist_get_node(
  * @param[in] fc specifies the freelist to put
  * @param[in] n is the node to put back
  */
-void freelist_put_node(
+void Freelist_Put_node(
   Freelist_Control *fc,
   void *n
 );
@@ -120,7 +120,7 @@ void freelist_put_node(
  * @param[in] fc is the freelist which this function is in
  * @param[in] nodes are all nodes bumped in freelist_bump
  */
-void freelist_do_nothing(
+void _Freelist_Do_nothing(
   Freelist_Control *fc,
   void *nodes
 );

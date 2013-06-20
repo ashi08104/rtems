@@ -15,7 +15,7 @@
 
 #include <rtems/score/freelist.h>
 
-void freelist_initialize(
+void _Freelist_Initialize(
     Freelist_Control *fc,
     size_t node_size,
     size_t bump_count,
@@ -26,13 +26,13 @@ void freelist_initialize(
   fc->bump_count = bump_count;
   fc->free_count = 0;
   if (!callout)
-    fc->callout = freelist_do_nothing;
+    fc->callout = _Freelist_Do_nothing;
   else
     fc->callout = callout;
-  freelist_bump(fc);
+  _Freelist_Bump(fc);
 }
 
-size_t freelist_bump(Freelist_Control *fc)
+size_t _Freelist_Bump(Freelist_Control *fc)
 {
   void *nodes;
   int i;
@@ -48,15 +48,15 @@ size_t freelist_bump(Freelist_Control *fc)
 
   fc->free_count += count;
   for ( i = 0; i < count; i++ ) {
-    _Chain_Append_unprotected( &fc->Freelist, (size_t)nodes+i*size );
+    _Chain_Append_unprotected( &fc->Freelist, (uintptr_t)nodes+i*size );
   }
   fc->callout(fc, nodes);
   return count;
 }
 
-void *freelist_get_node(Freelist_Control *fc) {
+void *_Freelist_Get_node(Freelist_Control *fc) {
   if ( fc->free_count == 0 ) {
-    if ( !freelist_bump(fc) ) {
+    if ( !_Freelist_Bump(fc) ) {
       return NULL;
     }
   }
@@ -64,11 +64,11 @@ void *freelist_get_node(Freelist_Control *fc) {
   return _Chain_Get_first_unprotected( &fc->Freelist );
 }
 
-void freelist_put_node(Freelist_Control *fc, void *n) {
+void _Freelist_Put_node(Freelist_Control *fc, void *n) {
   _Chain_Prepend_unprotected( &fc->Freelist, n );
   fc->free_count++;
 }
 
-void freelist_do_nothing(Freelist_Control *fc, void *nodes) {
+void _Freelist_Do_nothing(Freelist_Control *fc, void *nodes) {
   return;
 }

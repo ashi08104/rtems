@@ -96,7 +96,7 @@ int _POSIX_Keys_Rbtree_compare_function(
 
 void _POSIX_Keys_Keypool_init(void)
 {
-  freelist_initialize( &_POSIX_Keys_Keypool,
+  _Freelist_Initialize( &_POSIX_Keys_Keypool,
                        sizeof(POSIX_Keys_Rbtree_node),
                        /* if the highest bit not masked,
                         * it will fail under unlimited mode */
