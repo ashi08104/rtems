@@ -20,17 +20,11 @@ void _Freechain_Initialize(
     Freechain_Control *freechain,
     size_t node_size,
     size_t bump_count,
-    freechain_callout callout,
     Freechain_Extend extend
 ) {
   _Chain_Initialize_empty( &freechain->Freechain );
   freechain->node_size = node_size;
   freechain->bump_count = bump_count;
-  if (!callout)
-    freechain->callout = &_Freechain_Do_nothing;
-  else
-    freechain->callout = callout;
-
   freechain->extend = extend;
 }
 
@@ -47,6 +41,3 @@ void _Freechain_Put_node(Freechain_Control *freechain, void *n) {
   _Chain_Prepend_unprotected( &freechain->Freechain, n );
 }
 
-void _Freechain_Do_nothing(Freechain_Control *freechain, void *nodes) {
-  return;
-}

@@ -18,7 +18,7 @@
 
 /* forward declarations to avoid warnings */
 rtems_task Init(rtems_task_argument argument);
-void *my_freechain_extend_with_nothing( Freechain_Control *freechain );
+bool my_freechain_extend_with_nothing( Freechain_Control *freechain );
 void my_freechain_init( Freechain_Control *freechain );
 
 typedef struct {
@@ -26,7 +26,7 @@ typedef struct {
   int             x;
 } test_node;
 
-void *my_freechain_extend_with_nothing( Freechain_Control *freechain )
+bool my_freechain_extend_with_nothing( Freechain_Control *freechain )
 {
     return NULL;
 }
@@ -47,7 +47,7 @@ void my_freechain_init( Freechain_Control *freechain )
 
 rtems_task Init(
   rtems_task_argument ignored
-  )
+                )
 {
     puts( "*** START OF RTEMS FREECHAIN API TEST ***" );
 
@@ -57,8 +57,7 @@ rtems_task Init(
     _Freechain_Initialize(&fc,
                           sizeof(test_node),
                           5,
-                          NULL,
-                          0);
+                          &my_freechain_extend_with_nothing);
     my_freechain_init(&fc);
     
     puts( "INIT - Get node from freechain - OK" );

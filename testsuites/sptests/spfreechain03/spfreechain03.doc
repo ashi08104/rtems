@@ -8,7 +8,7 @@
 
 This file describes the directives and concepts tested by this test set.
 
-test set name:  spfreechain02
+test set name:  spfreechain03
 
 directives:
 
@@ -19,5 +19,5 @@ directives:
 
 concepts:
 
-+ Define a freechain extension handle, which allocates memory from heap
++ Define a freechain extension handle, which allocates memory from workspace
 + Ensure that the freechain is extended correctly by user provided extension handle

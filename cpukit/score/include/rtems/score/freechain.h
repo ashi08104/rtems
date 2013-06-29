@@ -45,18 +45,7 @@ typedef struct Freechain_Control Freechain_Control;
  *
  * @param[in] freechain The freechain control.
  */
-typedef void *( *Freechain_Extend )( Freechain_Control *freechain );
-
-/**
- * @typedef freechain_callout
- *
- * @param[in] freechain The freechain control.
- * @param[in] nodes The new added nodes.
- */
-typedef void (*freechain_callout)(
-  Freechain_Control *freechain,
-  void *nodes
-);
+typedef bool ( *Freechain_Extend )( Freechain_Control *freechain );
 
 /**
  * @typedef Freechain_Control
@@ -67,7 +56,6 @@ struct Freechain_Control {
   Chain_Control     Freechain;
   size_t            bump_count;
   size_t            node_size;
-  freechain_callout callout;
   Freechain_Extend  extend;
 };
 
@@ -92,7 +80,6 @@ void _Freechain_Initialize(
   Freechain_Control *freechain,
   size_t node_size,
   size_t bump_count,
-  freechain_callout callout,
   Freechain_Extend extend
 );
 
@@ -116,17 +103,6 @@ void *_Freechain_Get_node(
 void _Freechain_Put_node(
   Freechain_Control *freechain,
   void *n
-);
-
-/**
- * @brief this is the default called callout function for freechain
- *
- * @param[in] freechain is the freechain which this function is in
- * @param[in] nodes are all nodes bumped in freechain_bump
- */
-void _Freechain_Do_nothing(
-  Freechain_Control *freechain,
-  void *nodes
 );
 
 #ifdef __cplusplus

@@ -30,12 +30,15 @@ bool my_freechain_extend( Freechain_Control *freechain )
 {
   size_t size = freechain->bump_count * freechain->node_size;
   int i;
-  test_node *nodes = malloc(size);
+  test_node *nodes = _Workspace_Allocate(size);
   
   if (!nodes) {
     printf( "INIT - Unable to allocate free chain of size: %d\n", size );
     return NULL;
   }
+
+  puts( "INIT - Allocate node from workspace in user defined freechain extend"
+        " - OK" ); 
 
   for ( i = 0; i < freechain->bump_count; i++ ) {
       _Freechain_Put_node(freechain,
@@ -48,7 +51,7 @@ void my_freechain_init( Freechain_Control *freechain )
 {
   size_t bump_count = freechain->bump_count;
   size_t size = bump_count * sizeof(test_node);
-  test_node *nodes = malloc(size);
+  test_node *nodes = _Workspace_Allocate(size);
 
   _Chain_Initialize(
     &freechain->Freechain,
@@ -93,6 +96,7 @@ rtems_task Init(
 #define CONFIGURE_APPLICATION_NEEDS_CONSOLE_DRIVER
 #define CONFIGURE_APPLICATION_DOES_NOT_NEED_CLOCK_DRIVER
 
+#define CONFIGURE_MEMORY_OVERHEAD sizeof(test_node)
 #define CONFIGURE_RTEMS_INIT_TASKS_TABLE
 #define CONFIGURE_MAXIMUM_TASKS 1
 
