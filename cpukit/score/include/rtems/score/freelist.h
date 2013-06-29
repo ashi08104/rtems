@@ -59,6 +59,7 @@ struct Freelist_Control_struct {
   size_t            bump_count;
   size_t            node_size;
   freelist_callout  callout;
+  bool              use_workspace;
 };
 
 /**
@@ -75,12 +76,15 @@ struct Freelist_Control_struct {
  * @param[in] bump_count is the size of chain increased when no free node left.
  * @param[in] callout is the function called on all nodes in freelist_bump,
  * if it's null, a default function is set.
+ * @param[in] use_workspace is used to determine whether heap or workspace is
+ * in for Freelist node.
  */
 void _Freelist_Initialize(
   Freelist_Control *fc,
   size_t node_size,
   size_t bump_count,
-  freelist_callout callout
+  freelist_callout callout,
+  bool use_worksapce
 );
 
 /**

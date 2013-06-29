@@ -14,12 +14,14 @@
  */
 
 #include <rtems/score/freelist.h>
+#include <rtems/malloc.h>
 
 void _Freelist_Initialize(
     Freelist_Control *fc,
     size_t node_size,
     size_t bump_count,
-    freelist_callout callout
+    freelist_callout callout,
+    bool use_workspace
 ) {
   _Chain_Initialize_empty( &fc->Freelist );
   fc->node_size = node_size;
@@ -29,6 +31,7 @@ void _Freelist_Initialize(
     fc->callout = _Freelist_Do_nothing;
   else
     fc->callout = callout;
+  fc->use_workspace = use_workspace;
   _Freelist_Bump(fc);
 }
 
@@ -39,8 +42,11 @@ size_t _Freelist_Bump(Freelist_Control *fc)
   size_t count = fc->bump_count;
   size_t size = fc->node_size;
 
-  /* better to use workspace or malloc? */
-  nodes = _Workspace_Allocate(count * size);
+  if (fc->use_workspace == true)
+    nodes = _Workspace_Allocate(count * size);
+  else
+    nodes = malloc(count * size);
+
   if (!nodes) {
     printk("Unable to allocate free list of size: %d\n", count * size);
     return 0;
