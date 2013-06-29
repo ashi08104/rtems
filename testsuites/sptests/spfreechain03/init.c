@@ -31,14 +31,14 @@ bool my_freechain_extend( Freechain_Control *freechain )
   size_t size = freechain->bump_count * freechain->node_size;
   int i;
   test_node *nodes = _Workspace_Allocate(size);
-  
+
   if (!nodes) {
     printf( "INIT - Unable to allocate free chain of size: %d\n", size );
     return NULL;
   }
 
   puts( "INIT - Allocate node from workspace in user defined freechain extend"
-        " - OK" ); 
+        " - OK" );
 
   for ( i = 0; i < freechain->bump_count; i++ ) {
       _Freechain_Put_node(freechain,
@@ -76,9 +76,9 @@ rtems_task Init(
                           init_size,
                           &my_freechain_extend);
     my_freechain_init(&fc);
-    
+
     puts( "INIT - Get more than intialized nodes from freechain - OK" );
-    
+
     for ( i = 0; i < init_size * 2; i++ ) {
         test_node_p = (test_node *)_Freechain_Get_node(&fc);
         if (!test_node_p) {
@@ -86,7 +86,7 @@ rtems_task Init(
             rtems_test_exit(0);
         }
     }
-    
+
     puts( "*** END OF RTEMS FREECHAIN API TEST ***" );
     rtems_test_exit(0);
 }

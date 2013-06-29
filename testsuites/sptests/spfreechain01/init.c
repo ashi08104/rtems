@@ -59,11 +59,11 @@ rtems_task Init(
                           5,
                           &my_freechain_extend_with_nothing);
     my_freechain_init(&fc);
-    
+
     puts( "INIT - Get node from freechain - OK" );
     test_node_p = (test_node *)_Freechain_Get_node(&fc);
     test_node_p->x = 1;
-    
+
     puts( "INIT - Put node to freechain - OK" );
     _Freechain_Put_node(&fc, (void *)test_node_p);
 
@@ -73,7 +73,7 @@ rtems_task Init(
         puts( "INIT - ERROR ON FREECHAIN GET AND PUT" );
         rtems_test_exit(0);
     }
-    
+
     puts( "*** END OF RTEMS FREECHAIN API TEST ***" );
     rtems_test_exit(0);
 }
