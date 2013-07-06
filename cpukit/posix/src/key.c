@@ -101,7 +101,8 @@ void _POSIX_Keys_Keypool_init(void)
                        /* if the highest bit not masked,
                         * it will fail under unlimited mode */
                        Configuration_POSIX_API.maximum_key_pairs & 0x7FFFFFFF,
-                       0 );
+                       0, 
+                       1);
 }
 
 /**
