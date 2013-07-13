@@ -31,7 +31,7 @@ include_rtems_score_HEADERS += include/rtems/score/protectedheap.h
 include_rtems_score_HEADERS += include/rtems/score/interr.h
 include_rtems_score_HEADERS += include/rtems/score/isr.h
 include_rtems_score_HEADERS += include/rtems/score/isrlevel.h
-include_rtems_score_HEADERS += include/rtems/score/freelist.h
+include_rtems_score_HEADERS += include/rtems/score/freechain.h
 include_rtems_score_HEADERS += include/rtems/score/object.h
 include_rtems_score_HEADERS += include/rtems/score/percpu.h
 include_rtems_score_HEADERS += include/rtems/score/priority.h
@@ -266,8 +266,8 @@ libscore_a_SOURCES += src/pheapallocate.c \
     src/pheapgetblocksize.c src/pheapgetfreeinfo.c src/pheapgetinfo.c \
     src/pheapinit.c src/pheapresizeblock.c src/pheapwalk.c src/pheapiterate.c
 
-## FREELIST_C_FILES
-libscore_a_SOURCES += src/freelist.c
+## FREECHAIN_C_FILES
+libscore_a_SOURCES += src/freechain.c
 
 ## RBTREE_C_FILES
 libscore_a_SOURCES += src/rbtree.c \
