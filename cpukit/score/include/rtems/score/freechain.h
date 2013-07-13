@@ -45,10 +45,13 @@ typedef struct Freechain_Control Freechain_Control;
  *
  * @param[in] freechain The freechain control.
  */
-typedef int ( *Freechain_Extend )( Freechain_Control *freechain );
+typedef void *( *Freechain_Extend )( Freechain_Control *freechain );
 
 /**
  * @typedef freechain_callout
+ *
+ * @param[in] freechain The freechain control.
+ * @param[in] nodes The new added nodes.
  */
 typedef void (*freechain_callout)(
   Freechain_Control *freechain,
@@ -58,7 +61,7 @@ typedef void (*freechain_callout)(
 /**
  * @typedef Freechain_Control
  *
- * This is used to manage each element.
+ * This is used to manage freechain's nodes.
  */
 struct Freechain_Control {
   Chain_Control     Freechain;
@@ -82,8 +85,8 @@ struct Freechain_Control {
  * @param[in] bump_count is the size of chain increased when no free node left.
  * @param[in] callout is the function called on all nodes in freechain_bump,
  * if it's null, a default function is set.
- * @param[in] use_workspace is used to determine whether heap or workspace is
- * in for Freechain node.
+ * @param[in] extend is the user defined extention handle, it is called when no
+ * free node left.
  */
 void _Freechain_Initialize(
   Freechain_Control *freechain,
@@ -92,15 +95,6 @@ void _Freechain_Initialize(
   freechain_callout callout,
   Freechain_Extend extend
 );
-
-/* /\** */
-/*  * @brief bump the freechain's size */
-/*  * */
-/*  * @param[in] freechain specifies the freechain to bump */
-/*  *\/ */
-/* size_t _Freechain_Bump( */
-/*   Freechain_Control* freechain */
-/* ); */
 
 /**
  * @brief get node from freechain
@@ -119,7 +113,7 @@ void *_Freechain_Get_node(
  * @param[in] freechain specifies the freechain to put
  * @param[in] n is the node to put back
  */
-void Freechain_Put_node(
+void _Freechain_Put_node(
   Freechain_Control *freechain,
   void *n
 );

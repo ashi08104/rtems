@@ -34,36 +34,8 @@ void _Freechain_Initialize(
   freechain->extend = extend;
 }
 
-/* size_t _Freechain_Bump(Freechain_Control *freechain) */
-/* { */
-/*   void *nodes; */
-/*   int i; */
-/*   size_t count = freechain->bump_count; */
-/*   size_t size = freechain->node_size; */
-
-/*   if (freechain->use_workspace == true) */
-/*     nodes = _Workspace_Allocate(count * size); */
-/*   else */
-/*     nodes = malloc(count * size); */
-
-/*   if (!nodes) { */
-/*     printk("Unable to allocate free list of size: %d\n", count * size); */
-/*     return 0; */
-/*   } */
-
-/*   freechain->free_count += count; */
-/*   for ( i = 0; i < count; i++ ) { */
-/*     _Chain_Append_unprotected( &freechain->Freechain, (uintptr_t)nodes+i*size ); */
-/*   } */
-/*   freechain->callout(freechain, nodes); */
-/*   return count; */
-/* } */
-
 void *_Freechain_Get_node(Freechain_Control *freechain) {
   if ( _Chain_Is_empty( &freechain->Freechain ) ) {
-    /* if ( !_Freechain_Bump(freechain) ) { */
-    /*   return NULL; */
-    /* } */
     if ( !(*freechain->extend)(freechain) ) {
         return NULL;
     }
