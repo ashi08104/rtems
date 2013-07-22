@@ -54,8 +54,6 @@ typedef bool ( *Freechain_Extend )( Freechain_Control *freechain );
  */
 struct Freechain_Control {
   Chain_Control     Freechain;
-  size_t            bump_count;
-  size_t            node_size;
   Freechain_Extend  extend;
 };
 
@@ -69,8 +67,6 @@ struct Freechain_Control {
  * workspace.
  *
  * @param[in] freechain is the freechain too initialize.
- * @param[in] node_size is size of the elemment in this freechain.
- * @param[in] bump_count is the size of chain increased when no free node left.
  * @param[in] callout is the function called on all nodes in freechain_bump,
  * if it's null, a default function is set.
  * @param[in] extend is the user defined extention handle, it is called when no
@@ -78,8 +74,6 @@ struct Freechain_Control {
  */
 void _Freechain_Initialize(
   Freechain_Control *freechain,
-  size_t node_size,
-  size_t bump_count,
   Freechain_Extend extend
 );
 

@@ -18,13 +18,9 @@
 
 void _Freechain_Initialize(
     Freechain_Control *freechain,
-    size_t node_size,
-    size_t bump_count,
     Freechain_Extend extend
 ) {
   _Chain_Initialize_empty( &freechain->Freechain );
-  freechain->node_size = node_size;
-  freechain->bump_count = bump_count;
   freechain->extend = extend;
 }
 
