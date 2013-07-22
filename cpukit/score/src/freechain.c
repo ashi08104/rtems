@@ -28,7 +28,7 @@ void _Freechain_Initialize(
   freechain->extend = extend;
 }
 
-void *_Freechain_Get_node(Freechain_Control *freechain) {
+void *_Freechain_Get(Freechain_Control *freechain) {
   if ( _Chain_Is_empty( &freechain->Freechain ) ) {
     if ( !(*freechain->extend)(freechain) ) {
         return NULL;
@@ -37,7 +37,7 @@ void *_Freechain_Get_node(Freechain_Control *freechain) {
   return _Chain_Get_first_unprotected( &freechain->Freechain );
 }
 
-void _Freechain_Put_node(Freechain_Control *freechain, void *n) {
+void _Freechain_Put(Freechain_Control *freechain, void *n) {
   _Chain_Prepend_unprotected( &freechain->Freechain, n );
 }
 

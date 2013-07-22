@@ -90,7 +90,7 @@ void _Freechain_Initialize(
  *
  * @retval the point to node is return if success, return null if failed.
  */
-void *_Freechain_Get_node(
+void *_Freechain_Get(
   Freechain_Control *freechain
 );
 
@@ -100,7 +100,7 @@ void *_Freechain_Get_node(
  * @param[in] freechain specifies the freechain to put
  * @param[in] n is the node to put back
  */
-void _Freechain_Put_node(
+void _Freechain_Put(
   Freechain_Control *freechain,
   void *n
 );
