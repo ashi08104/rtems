@@ -41,7 +41,7 @@ bool my_freechain_extend( Freechain_Control *freechain )
         " - OK" );
 
   for ( i = 0; i < freechain->bump_count; i++ ) {
-      _Freechain_Put_node(freechain,
+      _Freechain_Put(freechain,
                           nodes + i * freechain->node_size);
   }
   return nodes;
@@ -80,7 +80,7 @@ rtems_task Init(
     puts( "INIT - Get more than intialized nodes from freechain - OK" );
 
     for ( i = 0; i < init_size * 2; i++ ) {
-        test_node_p = (test_node *)_Freechain_Get_node(&fc);
+        test_node_p = (test_node *)_Freechain_Get(&fc);
         if (!test_node_p) {
             puts( "INIT - Get node from freechain failed - FAILED" );
             rtems_test_exit(0);
