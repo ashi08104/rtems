@@ -1,4 +1,0 @@
-*** START OF RTEMS FREECHAIN API TEST ***
-INIT - Get more than intialized nodes from freechain - OK
-INIT - Allocate node from workspace in user defined freechain extend - OK
-*** END OF RTEMS FREECHAIN API TEST ***
