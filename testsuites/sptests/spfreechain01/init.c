@@ -30,7 +30,7 @@ typedef struct {
 } MyFreechain;
 
 typedef struct {
-  Objects_Control obj;
+  Chain_Node ch_node;
   int x;
 } test_node;
 
@@ -123,38 +123,38 @@ rtems_task Init(
     puts( "*** START OF RTEMS FREECHAIN API TEST ***" );
 
     test_node *test_node_p;
-    Freechain_Control fc;
-    MyFreechain *self = (MyFreechain *)&fc;
+    MyFreechain myfc;
+    Freechain_Control *fc_p = (Freechain_Control *)&myfc;
     int i;
 
     /* check whether freechain put and get works correctly*/
-    _Freechain_Initialize(&fc,
+    _Freechain_Initialize(fc_p,
                           &my_freechain_extend_with_nothing);
-    my_freechain_init_heap(&fc);
+    my_freechain_init_heap(fc_p);
 
     puts( "INIT - Get node from freechain - OK" );
-    test_node_p = (test_node *)_Freechain_Get(&fc);
+    test_node_p = (test_node *)_Freechain_Get(fc_p);
     test_node_p->x = 1;
 
     puts( "INIT - Put node back to freechain - OK" );
-    _Freechain_Put(&fc, (void *)test_node_p);
+    _Freechain_Put(fc_p, (void *)test_node_p);
 
     puts( "INIT - Verify freechain node put and get - OK" );
-    test_node_p = (test_node *)_Freechain_Get(&fc);
+    test_node_p = (test_node *)_Freechain_Get(fc_p);
     if(test_node_p->x != 1) {
       puts( "INIT - ERROR ON FREECHAIN GET AND PUT" );
       rtems_test_exit(0);
     }
 
     /* check whether freechain extend handle on heap works correctly */
-    _Freechain_Initialize(&fc,
+    _Freechain_Initialize(fc_p,
                           &my_freechain_extend_heap);
-    my_freechain_init_heap(&fc);
+    my_freechain_init_heap(fc_p);
 
     puts( "INIT - Get more than intialized nodes from freechain on heap - OK" );
 
-    for ( i = 0; i < self->bump_count * 2; i++ ) {
-        test_node_p = (test_node *)_Freechain_Get(&fc);
+    for ( i = 0; i < myfc.bump_count * 2; i++ ) {
+        test_node_p = (test_node *)_Freechain_Get(fc_p);
         if (!test_node_p) {
             puts( "INIT - Get node from freechain failed - FAILED" );
             rtems_test_exit(0);
@@ -162,15 +162,15 @@ rtems_task Init(
     }
 
     /* check whether freechain extend handle in workspace works correctly */
-    _Freechain_Initialize(&fc,
+    _Freechain_Initialize(fc_p,
                           &my_freechain_extend_workspace);
-    my_freechain_init_workspace(&fc);
+    my_freechain_init_workspace(fc_p);
 
     puts( "INIT - Get more than intialized nodes from freechain in workspace"
           " - OK" );
 
-    for ( i = 0; i < self->bump_count * 2; i++ ) {
-        test_node_p = (test_node *)_Freechain_Get(&fc);
+    for ( i = 0; i < myfc.bump_count * 2; i++ ) {
+        test_node_p = (test_node *)_Freechain_Get(fc_p);
         if (!test_node_p) {
             puts( "INIT - Get node from freechain failed - FAILED" );
             rtems_test_exit(0);
