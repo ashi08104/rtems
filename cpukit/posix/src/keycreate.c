@@ -37,10 +37,6 @@ int pthread_key_create(
 )
 {
   POSIX_Keys_Control  *the_key;
-  void                *table;
-  uint32_t             the_api;
-  uint32_t             bytes_to_allocate;
-
 
   _Thread_Disable_dispatch();
 

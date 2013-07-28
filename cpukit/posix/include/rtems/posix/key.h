@@ -23,7 +23,7 @@
 #include <rtems/score/object.h>
 #include <rtems/score/rbtree.h>
 #include <rtems/score/chain.h>
-#include <rtems/score/freelist.h>
+#include <rtems/score/freechain.h>
 
 /**
  * @defgroup POSIX_KEY POSIX Key
@@ -37,6 +37,11 @@
 extern "C" {
 #endif
 
+/** 
+ * Forward declaretion
+ */
+typedef struct POSIX_Keys_Freechain_node_struct POSIX_Keys_Freechain_node;
+
 /**
  * @brief The rbtree node used to manage a POSIX key and value.
  */
@@ -45,13 +50,31 @@ typedef struct {
   Chain_Node ch_node;
   /** This field is the rbtree node structure. */
   RBTree_Node rb_node;
+  /** This field points to parent freechain node */
+  POSIX_Keys_Freechain_node *fc_node;
   /** This field is the POSIX key used as an rbtree key */
   pthread_key_t key;
   /** This field is the Thread id also used as an rbtree key */
   Objects_Id thread_id;
   /** This field points to the POSIX key value of specific thread */
   void *value;
- }  POSIX_Keys_Rbtree_node;
+}  POSIX_Keys_Rbtree_node;
+
+/**
+ * @brief POSIX_Keys_Freechain is used in Freechain structure
+ */
+typedef struct {
+    Freechain_Control super_fc;
+    size_t bump_count;
+} POSIX_Keys_Freechain;
+
+/**
+ * @brief POSIX_Keys_Freechain_node is freechain node
+ */
+struct POSIX_Keys_Freechain_node_struct {
+  Chain_Node ch_node;
+  POSIX_Keys_Rbtree_node rb_node;
+};
 
 /**
  * @brief The data structure used to manage a POSIX key.
@@ -74,9 +97,9 @@ POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
 POSIX_EXTERN RBTree_Control _POSIX_Keys_Rbtree;
 
 /**
- * @brief This freelist is used as a memory pool for POSIX_Keys_Rbtree_node.
+ * @brief This freechain is used as a memory pool for POSIX_Keys_Rbtree_node.
  */
-POSIX_EXTERN Freelist_Control _POSIX_Keys_Keypool;
+POSIX_EXTERN POSIX_Keys_Freechain _POSIX_Keys_Keypool;
 
 /**
  * @brief POSIX key manager initialization.

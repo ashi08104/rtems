@@ -43,26 +43,29 @@ int pthread_setspecific(
 {
   Objects_Locations            location;
   POSIX_Keys_Rbtree_node      *rb_node;
-  Chain_Node                  *ch_node;
+  POSIX_Keys_Freechain_node   *fc_node;
   POSIX_API_Control           *api;
 
   _POSIX_Keys_Get( key, &location );
   switch ( location ) {
 
     case OBJECTS_LOCAL:
-      rb_node = ( POSIX_Keys_Rbtree_node * )
-        _Freelist_Get_node( &_POSIX_Keys_Keypool );
-      if ( !rb_node ) {
+      fc_node = ( POSIX_Keys_Freechain_node * )
+        _Freechain_Get( (Freechain_Control *)&_POSIX_Keys_Keypool );
+      if ( !fc_node ) {
         _Thread_Enable_dispatch();
         return ENOMEM;
       }
 
+      rb_node = &fc_node->rb_node;
+      rb_node->fc_node = fc_node;
       rb_node->key = key;
       rb_node->thread_id = _Thread_Executing->Object.id;
       rb_node->value = value;
       if ( _RBTree_Insert_unprotected( &_POSIX_Keys_Rbtree,
                                        &(rb_node->rb_node) ) ) {
-        _Freelist_Put_node( &_POSIX_Keys_Keypool, ( void * ) rb_node);
+        _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
+                        (void *) fc_node );
         _Thread_Enable_dispatch();
         return EAGAIN;
       }

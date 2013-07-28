@@ -1734,7 +1734,7 @@ const rtems_libio_helper rtems_fs_init_helper =
     #endif
   #define CONFIGURE_MEMORY_FOR_POSIX_KEYS(_keys, _key_pairs)       \
       (_Configure_Object_RAM(_keys, sizeof(POSIX_Keys_Control) ) \
-  + _Configure_From_workspace(_key_pairs * sizeof(POSIX_Keys_Rbtree_node)))
+  + _Configure_From_workspace(_key_pairs * sizeof(POSIX_Keys_Freechain_node)))
   #endif
 
   #ifndef CONFIGURE_MAXIMUM_POSIX_TIMERS

@@ -32,9 +32,12 @@
 #include <rtems/posix/key.h>
 #include <rtems/score/rbtree.h>
 #include <rtems/score/chain.h>
+#include <rtems/score/freechain.h>
 
 /* forward declarations to avoid warnings */
 void _POSIX_Keys_Keypool_init(void);
+bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain);
+void _POSIX_Keys_Freechain_init(Freechain_Control *freechain);
 
 /**
  * @brief This routine compares the rbtree node by comparing POSIX key first
@@ -81,28 +84,57 @@ int _POSIX_Keys_Rbtree_compare_function(
   return 0;
 }
 
-/*
- * _POSIX_Keys_Keypool_init
- *
- * DESCRIPTION:
- *
- * This routine does keypool initialize, keypool contains all
+/**
+ * @brief This routine does keypool initialize, keypool contains all
  * POSIX_Keys_Rbtree_node
- *
- * Input parameters: NONE
- *
- * Output parameters: NONE
  */
 
 void _POSIX_Keys_Keypool_init(void)
 {
-  _Freelist_Initialize( &_POSIX_Keys_Keypool,
-                       sizeof(POSIX_Keys_Rbtree_node),
-                       /* if the highest bit not masked,
-                        * it will fail under unlimited mode */
-                       Configuration_POSIX_API.maximum_key_pairs & 0x7FFFFFFF,
-                       0, 
-                       1);
+  _Freechain_Initialize((Freechain_Control *)&_POSIX_Keys_Keypool,
+                       &_POSIX_Keys_Freechain_extend);
+
+  _POSIX_Keys_Freechain_init((Freechain_Control *)&_POSIX_Keys_Keypool);
+}
+
+/**
+ * @brief This routine does user side freechain initialization
+ */
+void _POSIX_Keys_Freechain_init(Freechain_Control *freechain)
+{
+  POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
+  psx_freechain_p->bump_count = 
+    Configuration_POSIX_API.maximum_key_pairs & 0x7FFFFFFF;
+  size_t size = psx_freechain_p->bump_count * sizeof(POSIX_Keys_Freechain_node);
+  POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
+
+  _Chain_Initialize(
+                    &freechain->Freechain,
+                    nodes,
+                    psx_freechain_p->bump_count,
+                    sizeof(POSIX_Keys_Freechain_node)
+                    );
+}
+
+/**
+ * @brief This routine is user defined freechain extension handle
+ */
+bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain)
+{
+  POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
+  size_t node_size = sizeof(POSIX_Keys_Freechain_node);
+  size_t size = psx_freechain_p->bump_count * node_size;
+  int i;
+  POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
+
+  if (!nodes)
+    return NULL;
+
+  for ( i = 0; i < psx_freechain_p->bump_count; i++ ) {
+      _Freechain_Put(freechain,
+                     nodes + i * node_size);
+  }
+  return true;
 }
 
 /**

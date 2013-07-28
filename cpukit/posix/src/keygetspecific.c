@@ -42,6 +42,7 @@ void *pthread_getspecific(
   POSIX_Keys_Rbtree_node       search_node;
   RBTree_Node                 *p;
   void                        *key_data;
+  POSIX_Keys_Rbtree_node      *rb_node_p;
 
   _POSIX_Keys_Get( key, &location );
   switch ( location ) {
@@ -52,9 +53,13 @@ void *pthread_getspecific(
       p = _RBTree_Find_unprotected( &_POSIX_Keys_Rbtree, &search_node.rb_node );
       key_data = NULL;
       if ( p ) {
-        key_data = _RBTree_Container_of( p,
-                                         POSIX_Keys_Rbtree_node,
-                                         rb_node )->value;
+        rb_node_p = _RBTree_Container_of( p,
+                                          POSIX_Keys_Rbtree_node,
+                                          rb_node );
+        /* key_data = _RBTree_Container_of( p, */
+        /*                                  POSIX_Keys_Rbtree_node, */
+        /*                                  rb_node )->value; */
+        key_data = rb_node_p->value;
       }
       _Thread_Enable_dispatch();
       return key_data;

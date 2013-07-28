@@ -49,8 +49,9 @@ int pthread_key_delete(
        *         of the application to free the memory.
        */
       _POSIX_Keys_Free( the_key );
-      _Objects_Close( &_POSIX_Keys_Information, &the_key->Object );
-      _Thread_Enable_dispatch();
+      //_Objects_Close( &_POSIX_Keys_Information, &the_key->Object );
+      _Objects_Put(&the_key->Object);
+      //_Thread_Enable_dispatch();
       return 0;
 
 #if defined(RTEMS_MULTIPROCESSING)

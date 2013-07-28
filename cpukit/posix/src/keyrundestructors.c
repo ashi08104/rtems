@@ -85,12 +85,11 @@ void _POSIX_Keys_Run_destructors(
     _Thread_Enable_dispatch();
 
     /**
-     * append the node to _POSIX_Keys_Keypool, here we can convert iter
-     * to ( void * ) directly for ch_node if the first member of
-     * POSIX_Keys_Rbtree_node structure.
+     * put back this node to keypool
      */
-    _Freelist_Put_node( &_POSIX_Keys_Keypool,
-                       ( void * ) iter);
+    _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
+                    (void *) ((POSIX_Keys_Rbtree_node *)iter)->fc_node );
+
     iter = next;
   }
   _Thread_Enable_dispatch();
