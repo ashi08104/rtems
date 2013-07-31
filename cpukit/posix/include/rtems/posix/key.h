@@ -23,6 +23,7 @@
 #include <rtems/score/object.h>
 #include <rtems/score/rbtree.h>
 #include <rtems/score/chain.h>
+#include <rtems/score/chainimpl.h>
 #include <rtems/score/freechain.h>
 #include <rtems/score/objectimpl.h>
 
