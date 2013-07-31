@@ -128,11 +128,11 @@ bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain)
   POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
 
   if (!nodes)
-    return NULL;
+    return false;
 
   for ( i = 0; i < psx_freechain_p->bump_count; i++ ) {
       _Freechain_Put(freechain,
-                     nodes + i * node_size);
+                     nodes + i);
   }
   return true;
 }

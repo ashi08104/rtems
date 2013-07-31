@@ -51,7 +51,7 @@ typedef struct {
   /** This field is the rbtree node structure. */
   RBTree_Node rb_node;
   /** This field points to parent freechain node */
-  POSIX_Keys_Freechain_node *fc_node;
+  POSIX_Keys_Freechain_node *fc_node_ptr;
   /** This field is the POSIX key used as an rbtree key */
   pthread_key_t key;
   /** This field is the Thread id also used as an rbtree key */

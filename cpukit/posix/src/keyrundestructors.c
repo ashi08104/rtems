@@ -88,7 +88,7 @@ void _POSIX_Keys_Run_destructors(
      * put back this node to keypool
      */
     _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
-                    (void *) ((POSIX_Keys_Rbtree_node *)iter)->fc_node );
+                    (void *) ((POSIX_Keys_Rbtree_node *)iter)->fc_node_ptr );
 
     iter = next;
   }
