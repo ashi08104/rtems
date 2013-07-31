@@ -272,7 +272,7 @@ const rtems_libio_helper rtems_fs_init_helper =
    */
   #if defined(CONFIGURE_APPLICATION_DISABLE_FILESYSTEM)
      #if defined(CONFIGURE_USE_DEVFS_AS_BASE_FILESYSTEM) || \
-	 defined(CONFIGURE_USE_MINIIMFS_AS_BASE_FILESYSTEM)
+         defined(CONFIGURE_USE_MINIIMFS_AS_BASE_FILESYSTEM)
        #error "Filesystem disabled but a base filesystem configured."
      #endif
 
@@ -1857,7 +1857,7 @@ const rtems_libio_helper rtems_fs_init_helper =
           CONFIGURE_MAXIMUM_POSIX_CONDITION_VARIABLES + \
           CONFIGURE_MAXIMUM_GO_CHANNELS + CONFIGURE_GO_INIT_CONDITION_VARIABLES) + \
       CONFIGURE_MEMORY_FOR_POSIX_KEYS( CONFIGURE_MAXIMUM_POSIX_KEYS, \
-                                       CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS ) + \              
+                                       CONFIGURE_MAXIMUM_POSIX_KEY_PAIRS ) + \
       CONFIGURE_MEMORY_FOR_POSIX_QUEUED_SIGNALS( \
           CONFIGURE_MAXIMUM_POSIX_QUEUED_SIGNALS ) + \
       CONFIGURE_MEMORY_FOR_POSIX_MESSAGE_QUEUES( \

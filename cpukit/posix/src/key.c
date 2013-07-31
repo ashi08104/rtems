@@ -103,7 +103,7 @@ void _POSIX_Keys_Keypool_init(void)
 void _POSIX_Keys_Freechain_init(Freechain_Control *freechain)
 {
   POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
-  psx_freechain_p->bump_count = 
+  psx_freechain_p->bump_count =
     Configuration_POSIX_API.maximum_key_pairs & 0x7FFFFFFF;
   size_t size = psx_freechain_p->bump_count * sizeof(POSIX_Keys_Freechain_node);
   POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);

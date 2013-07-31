@@ -37,7 +37,7 @@
 extern "C" {
 #endif
 
-/** 
+/**
  * Forward declaretion
  */
 typedef struct POSIX_Keys_Freechain_node_struct POSIX_Keys_Freechain_node;

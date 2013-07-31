@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2012 Zhongwei Yao.  
+ *  Copyright (c) 2012 Zhongwei Yao.
  *  COPYRIGHT (c) 1989-2012.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -78,7 +78,7 @@ void *POSIX_Init(
 
   puts( "Init - verify destructor run - OK" );
   rtems_test_assert( destructor_ran == true );
-  
+
   puts( "Init - pthread key delete - OK" );
   sc = pthread_key_delete( key );
   rtems_test_assert( sc == 0 );

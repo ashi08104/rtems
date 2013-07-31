@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2012 Zhongwei Yao.  
+ *  Copyright (c) 2012 Zhongwei Yao.
  *  COPYRIGHT (c) 1989-2012.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -34,7 +34,7 @@ void *Test_Thread(
 {
   int sc;
   int *value_p, *value_p2;
-  
+
   value_p = malloc( sizeof( int ) );
   //printf( "Test_Thread%d  - Key pthread_setspecific - OK\n", (int)pthread_self() );
   sc = pthread_setspecific( Key, value_p );
@@ -51,7 +51,7 @@ void *Test_Thread(
   while( !all_thread_created )
     pthread_cond_wait( &create_condition_var, &mutex2 );
   pthread_mutex_unlock( &mutex2 );
-  
+
   //printf( "Test_Thread%d  - Key pthread_getspecific - OK\n", (int)pthread_self() );
   value_p2 = pthread_getspecific( Key );
   rtems_test_assert( value_p == value_p2 );
@@ -68,9 +68,9 @@ void *POSIX_Init(
   int              sc;
   struct timespec  delay_request;
   all_thread_created = 0;
-  
+
   puts( "\n\n*** TEST KEY 07 ***" );
-  
+
   puts( "Init - Mutex 1 create - OK" );
   sc = pthread_mutex_init( &mutex1, NULL );
   rtems_test_assert( !sc );
@@ -87,7 +87,7 @@ void *POSIX_Init(
   puts( "Init - pthread Key create - OK" );
   sc = pthread_key_create( &Key, NULL );
   rtems_test_assert( !sc );
-  
+
   for( ; ; )
     {
       thread_p = malloc( sizeof( pthread_t ) );
@@ -98,7 +98,7 @@ void *POSIX_Init(
       /**
        * check if return is EAGAIN, it means RTEMS Workspace RAM
        * have been exhausted.
-       */ 
+       */
       if ( sc == EAGAIN )
         {
           pthread_mutex_unlock( &mutex1 );
@@ -107,7 +107,7 @@ void *POSIX_Init(
       ++created_thread_count;
       /**
        * wait for test thread set key, the while loop here is used to
-       * avoid suprious wakeup. 
+       * avoid suprious wakeup.
        */
       while( created_thread_count > setted_thread_count )
         pthread_cond_wait( &set_condition_var, &mutex1 );
@@ -121,13 +121,13 @@ void *POSIX_Init(
   all_thread_created = 1;
   pthread_cond_broadcast( &create_condition_var );
   pthread_mutex_unlock( &mutex2 );
-  
+
   puts( "Init - sleep - let threads run - OK" );
   delay_request.tv_sec = 0;
   delay_request.tv_nsec = 8 * 100000000;
   sc = nanosleep( &delay_request, NULL );
   rtems_test_assert( !sc );
-  
+
   printf( "Init - %d pthreads have been got key data - OK\n", got_thread_count );
   rtems_test_assert( created_thread_count == got_thread_count );
   puts( "Init - pthread Key delete - OK" );

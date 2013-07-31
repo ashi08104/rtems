@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2012 Zhongwei Yao.  
+ *  Copyright (c) 2012 Zhongwei Yao.
  *  COPYRIGHT (c) 1989-2012.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -34,7 +34,7 @@ rtems_task test_task(rtems_task_argument arg)
 {
   int sc;
   int *value_p, *value_p2;
-  
+
   value_p = malloc( sizeof( int ) );
   //printf( "Test_Task%d  - Key pthread_setspecific - OK\n", (int)rtems_task_self() );
   sc = pthread_setspecific( Key, value_p );
@@ -46,7 +46,7 @@ rtems_task test_task(rtems_task_argument arg)
    * blocked untill all tasks have been created.
    */
   rtems_semaphore_obtain( sema2 , RTEMS_WAIT, 0 );
-  
+
   //printf( "Test_Task%d  - Key pthread_getspecific - OK\n", (int)rtems_task_self() );
   value_p2 = pthread_getspecific( Key );
   rtems_test_assert( value_p == value_p2 );
@@ -64,7 +64,7 @@ rtems_task Init(rtems_task_argument arg)
   all_thread_created = 0;
 
   puts( "\n\n*** TEST KEY 08 ***" );
-  
+
   puts( "Init - Semaphore 1 create - OK" );
   name1 = rtems_build_name('S', 'E', 'M', '1');
   sc = rtems_semaphore_create( name1, 0,
@@ -110,13 +110,13 @@ rtems_task Init(rtems_task_argument arg)
       sc = rtems_task_start( *task_id_p,  test_task, 0 );
       rtems_test_assert( sc == RTEMS_SUCCESSFUL );
       sc = rtems_semaphore_obtain( sema1, RTEMS_WAIT, 0 );
-      rtems_test_assert( sc == RTEMS_SUCCESSFUL );      
+      rtems_test_assert( sc == RTEMS_SUCCESSFUL );
     }
-  
+
   printf( "Init - %d tasks have been created - OK\n", created_task_count );
   printf( "Init - %d tasks have been setted key data - OK\n", setted_task_count );
   rtems_test_assert( created_task_count == setted_task_count );
-  
+
   /* unblock all created tasks to let them set key data.*/
   puts( "Init - flush semaphore 2 - OK" );
   sc = rtems_semaphore_flush( sema2 );
@@ -139,7 +139,7 @@ rtems_task Init(rtems_task_argument arg)
   puts( "Init - semaphore 2 delete - OK" );
   sc = rtems_semaphore_delete( sema2 );
   rtems_test_assert( !sc );
-  
+
   puts( "*** END OF TEST KEY 08***" );
   exit(0);
 }
