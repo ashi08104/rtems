@@ -60,13 +60,13 @@ int _POSIX_Keys_Rbtree_compare_function(
   const RBTree_Node *node2
 )
 {
-  POSIX_Keys_Rbtree_node *n1;
-  POSIX_Keys_Rbtree_node *n2;
+  POSIX_Keys_Key_value_pair *n1;
+  POSIX_Keys_Key_value_pair *n2;
   Objects_Id thread_id1, thread_id2;
   int diff;
 
-  n1 = _RBTree_Container_of( node1, POSIX_Keys_Rbtree_node, rb_node );
-  n2 = _RBTree_Container_of( node2, POSIX_Keys_Rbtree_node, rb_node );
+  n1 = _RBTree_Container_of( node1, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
+  n2 = _RBTree_Container_of( node2, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
 
   diff = n1->key - n2->key;
   if ( diff )
@@ -86,7 +86,7 @@ int _POSIX_Keys_Rbtree_compare_function(
 
 /**
  * @brief This routine does keypool initialize, keypool contains all
- * POSIX_Keys_Rbtree_node
+ * POSIX_Keys_Key_value_pair
  */
 
 void _POSIX_Keys_Keypool_init(void)
@@ -104,7 +104,7 @@ void _POSIX_Keys_Freechain_init(Freechain_Control *freechain)
 {
   POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
   psx_freechain_p->bump_count =
-    Configuration_POSIX_API.maximum_key_pairs & 0x7FFFFFFF;
+    Configuration_POSIX_API.maximum_key_value_pairs & 0x7FFFFFFF;
   size_t size = psx_freechain_p->bump_count * sizeof(POSIX_Keys_Freechain_node);
   POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
 

@@ -57,13 +57,13 @@ void _POSIX_Keys_Run_destructors(
     next = _Chain_Next( iter );
     /**
      * remove key from rbtree and chain.
-     * here Chain_Node *iter can be convert to POSIX_Keys_Rbtree_node *,
-     * because Chain_Node is the first member of POSIX_Keys_Rbtree_node
+     * here Chain_Node *iter can be convert to POSIX_Keys_Key_value_pair *,
+     * because Chain_Node is the first member of POSIX_Keys_Key_value_pair
      * structure.
      */
     _RBTree_Extract_unprotected(
         &_POSIX_Keys_Rbtree,
-        &((POSIX_Keys_Rbtree_node *)iter)->rb_node
+        &((POSIX_Keys_Key_value_pair *)iter)->Key_value_lookup_node
     );
     _Chain_Extract_unprotected( iter );
 
@@ -71,11 +71,11 @@ void _POSIX_Keys_Run_destructors(
      * run key value's destructor if destructor and value are both non-null.
      */
     the_key = _POSIX_Keys_Get(
-        ((POSIX_Keys_Rbtree_node *)iter)->key,
+        ((POSIX_Keys_Key_value_pair *)iter)->key,
         &location
     );
     destructor = the_key->destructor;
-    value = ((POSIX_Keys_Rbtree_node *)iter)->value;
+    value = ((POSIX_Keys_Key_value_pair *)iter)->value;
     if ( destructor != NULL && value != NULL )
       (*destructor)( value );
     /**
@@ -87,7 +87,7 @@ void _POSIX_Keys_Run_destructors(
      * put back this node to keypool
      */
     _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
-                    (void *) ((POSIX_Keys_Rbtree_node *)iter)->fc_node_ptr );
+                    (void *) ((POSIX_Keys_Key_value_pair *)iter)->fc_node_ptr );
 
     iter = next;
   }

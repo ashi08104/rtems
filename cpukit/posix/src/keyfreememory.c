@@ -29,38 +29,38 @@ void _POSIX_Keys_Free_memory(
   POSIX_Keys_Control *the_key
 )
 {
-  POSIX_Keys_Rbtree_node search_node;
-  POSIX_Keys_Rbtree_node *p;
+  POSIX_Keys_Key_value_pair search_node;
+  POSIX_Keys_Key_value_pair *p;
   RBTree_Node *iter, *next;
 
   search_node.key = the_key->Object.id;
   search_node.thread_id = 0;
-  iter = _RBTree_Find_unprotected( &_POSIX_Keys_Rbtree, &search_node.rb_node );
+  iter = _RBTree_Find_unprotected( &_POSIX_Keys_Rbtree, &search_node.Key_value_lookup_node );
   if ( !iter )
     return;
   /**
    * find the smallest thread_id node in the rbtree.
    */
   next = _RBTree_Next_unprotected( iter, RBT_LEFT );
-  p = _RBTree_Container_of( next, POSIX_Keys_Rbtree_node, rb_node );
+  p = _RBTree_Container_of( next, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   while ( p->key == the_key->Object.id) {
     iter = next;
     next = _RBTree_Next_unprotected( iter, RBT_LEFT );
-    p = _RBTree_Container_of( next, POSIX_Keys_Rbtree_node, rb_node );
+    p = _RBTree_Container_of( next, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   }
 
   /**
    * delete all nodes belongs to the_key from the rbtree and chain.
    */
-  p = _RBTree_Container_of( iter, POSIX_Keys_Rbtree_node, rb_node );
+  p = _RBTree_Container_of( iter, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   while ( p->key == the_key->Object.id ) {
     next = _RBTree_Next_unprotected( iter, RBT_RIGHT );
     _RBTree_Extract_unprotected( &_POSIX_Keys_Rbtree, iter );
-    _Chain_Extract_unprotected( &p->ch_node );
+    _Chain_Extract_unprotected( &p->Key_values_per_thread_node );
     /* append the node to _POSIX_Keys_Keypool */
     _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
                        ( void * ) p->fc_node_ptr);
     iter = next;
-    p = _RBTree_Container_of( iter, POSIX_Keys_Rbtree_node, rb_node );
+    p = _RBTree_Container_of( iter, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   }
 }
