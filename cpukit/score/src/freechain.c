@@ -3,8 +3,9 @@
  *
  * @ingroup ScoreFreechain
  *
- * @brief Freechain Handler API
+ * @brief Freechain Handler Implementation
  */
+
 /*
  * Copyright (c) 2013 Gedare Bloom.
  *
@@ -13,27 +14,34 @@
  * http://www.rtems.com/license/LICENSE.
  */
 
+#if HAVE_CONFIG_H
+  #include "config.h"
+#endif
+
 #include <rtems/score/freechain.h>
-#include <rtems/malloc.h>
+#include <rtems/score/chainimpl.h>
 
 void _Freechain_Initialize(
     Freechain_Control *freechain,
-    Freechain_Extend extend
-) {
+    Freechain_Extend   extend
+)
+{
   _Chain_Initialize_empty( &freechain->Freechain );
   freechain->extend = extend;
 }
 
-void *_Freechain_Get(Freechain_Control *freechain) {
+void *_Freechain_Get(Freechain_Control *freechain)
+{
   if ( _Chain_Is_empty( &freechain->Freechain ) ) {
-    if ( !(*freechain->extend)(freechain) ) {
-        return NULL;
+    if ( !( *freechain->extend )( freechain ) ) {
+      return NULL;
     }
   }
+
   return _Chain_Get_first_unprotected( &freechain->Freechain );
 }
 
-void _Freechain_Put(Freechain_Control *freechain, void *n) {
-  _Chain_Prepend_unprotected( &freechain->Freechain, n );
+void _Freechain_Put( Freechain_Control *freechain, void *node )
+{
+  _Chain_Prepend_unprotected( &freechain->Freechain, node );
 }
-

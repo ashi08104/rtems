@@ -10,10 +10,10 @@
 #include "config.h"
 #endif
 
-#define __RTEMS_VIOLATE_KERNEL_VISIBILITY__
 #include <tmacros.h>
-#include <rtems/score/chain.h>
+#include <rtems/score/chainimpl.h>
 #include <rtems/score/freechain.h>
+#include <rtems/score/wkspace.h>
 #include <rtems/malloc.h>
 
 /* forward declarations to avoid warnings */

@@ -13,37 +13,38 @@
  * http://www.rtems.com/license/LICENSE.
  */
 
-#ifndef _FREECHAIN_H
-#define _FREECHAIN_H
+#ifndef _RTEMS_SCORE_FREECHAIN_H
+#define _RTEMS_SCORE_FREECHAIN_H
+
+#include <stdbool.h>
 
 #include <rtems/score/chain.h>
-#include <rtems/rtems/types.h>
-#include <rtems/score/wkspace.h>
-
-/**
- * @defgroup ScoreFreechain Freechain Handler API
- *
- * @ingroup Score
- *
- * The Freechain Handler is used to manage a chain of nodes, of which size can
- * automatically increase when there is no free node left. This handler provides one data structure:
- * Freechain_Control.
- */
-/**@{*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @typedef Freechain_Control
+ * @defgroup ScoreFreechain Freechain Handler
+ *
+ * @ingroup Score
+ *
+ * The Freechain Handler is used to manage a chain of nodes, of which size can
+ * automatically increase when there is no free node left. This handler
+ * provides one data structure: Freechain_Control.
+ *
+ * @{
  */
+
 typedef struct Freechain_Control Freechain_Control;
 
 /**
  * @brief Extends the freechain.
  *
  * @param[in] freechain The freechain control.
+ *
+ * @retval true The freechain contains now at least one node.
+ * @retval false Otherwise.
  */
 typedef bool ( *Freechain_Extend )( Freechain_Control *freechain );
 
@@ -58,51 +59,50 @@ struct Freechain_Control {
 };
 
 /**
- * @brief Initialize a freechain
+ * @brief Initializes a freechain.
  *
- * This routine initializes @a the Freechain_Control structure to manage a
- * chain of nodes, each node's size is @a node_size and the size of  chain is
- * initialized to @a bump_count and it also will increase with size of
- * @a bump_count. @a callout is called on all the nodes after allocated from
- * workspace.
+ * This routine initializes the freechain control structure to manage a chain
+ * of nodes.  In case the freechain is empty the extend handler is called to
+ * get more nodes.
  *
- * @param[in] freechain is the freechain too initialize.
- * @param[in] callout is the function called on all nodes in freechain_bump,
- * if it's null, a default function is set.
- * @param[in] extend is the user defined extention handle, it is called when no
- * free node left.
+ * @param[in,out] freechain The freechain control to initialize.
+ * @param[in] extend The extend handler.  It is called by _Freechain_Get() in
+ * case the freechain is empty.
  */
 void _Freechain_Initialize(
   Freechain_Control *freechain,
-  Freechain_Extend extend
+  Freechain_Extend   extend
 );
 
 /**
- * @brief get node from freechain
+ * @brief Gets a node from the freechain.
  *
- * @param[in] freechain specifies the freechain to get
+ * @param[in,out] freechain The freechain control.
  *
- * @retval the point to node is return if success, return null if failed.
+ * @retval NULL The freechain is empty and the extend operation failed.
+ * @retval otherwise Pointer to a node.  The node ownership passes to the
+ * caller.
  */
 void *_Freechain_Get(
   Freechain_Control *freechain
 );
 
 /**
- * @brief put node back to the freechain
+ * @brief Puts a node back onto the freechain.
  *
- * @param[in] freechain specifies the freechain to put
- * @param[in] n is the node to put back
+ * @param[in,out] freechain The freechain control.
+ * @param[in] node The node to put back.
  */
 void _Freechain_Put(
   Freechain_Control *freechain,
-  void *n
+  void              *node
 );
+
+/**@}*/
 
 #ifdef __cplusplus
 }
 #endif
-/**@}*/
 
 #endif
 /* end of include file */
