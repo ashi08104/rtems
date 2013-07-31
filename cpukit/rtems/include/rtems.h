@@ -49,6 +49,7 @@ extern "C" {
 #include <rtems/rtems/types.h>
 
 #include <rtems/config.h>
+#include <rtems/debug.h>
 #include <rtems/init.h>
 #include <rtems/rtems/options.h>
 #include <rtems/rtems/tasks.h>
@@ -76,7 +77,6 @@ extern "C" {
 #include <rtems/rtems/smp.h>
 
 #include <rtems/rtems/support.h>
-#include <rtems/score/sysstate.h>
 
 /**
  * @brief Returns the pointer to the RTEMS version string.

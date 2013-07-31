@@ -24,6 +24,8 @@
 #endif
 
 #include <rtems/rtems/support.h>
+#include <rtems/score/heapimpl.h>
+#include <rtems/score/threaddispatch.h>
 #include <rtems/score/wkspace.h>
 
 void *rtems_workspace_greedy_allocate(

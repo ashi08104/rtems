@@ -32,7 +32,7 @@
 #include <rtems/system.h>
 #include <rtems/config.h>
 #include <rtems/debug.h>
-#include <rtems/extension.h>
+#include <rtems/extensionimpl.h>
 #include <rtems/fatal.h>
 #include <rtems/init.h>
 #include <rtems/io.h>
@@ -44,15 +44,13 @@
 #include <rtems/score/heap.h>
 #include <rtems/score/interr.h>
 #include <rtems/score/isr.h>
-#if defined(RTEMS_MULTIPROCESSING)
-#include <rtems/score/mpci.h>
-#endif
 #include <rtems/score/priority.h>
-#include <rtems/score/scheduler.h>
-#include <rtems/score/thread.h>
+#include <rtems/score/prioritybitmapimpl.h>
+#include <rtems/score/schedulerimpl.h>
+#include <rtems/score/threadimpl.h>
 #include <rtems/score/tod.h>
 #include <rtems/score/userextimpl.h>
-#include <rtems/score/watchdog.h>
+#include <rtems/score/watchdogimpl.h>
 #include <rtems/score/wkspace.h>
 
 #include <rtems/sptables.h>

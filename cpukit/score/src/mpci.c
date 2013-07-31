@@ -18,22 +18,13 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#if defined(RTEMS_MULTIPROCESSING)
-#include <rtems/score/mpci.h>
-#include <rtems/score/mppkt.h>
-#endif
-#include <rtems/config.h>
-#include <rtems/score/cpu.h>
+#include <rtems/score/mpciimpl.h>
+#include <rtems/score/coresemimpl.h>
 #include <rtems/score/interr.h>
-#include <rtems/score/states.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/threadq.h>
-#include <rtems/score/tqdata.h>
-#include <rtems/score/watchdog.h>
+#include <rtems/score/stackimpl.h>
 #include <rtems/score/sysstate.h>
-
-#include <rtems/score/coresem.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/threadqimpl.h>
 #include <rtems/config.h>
 
 RTEMS_STATIC_ASSERT(
@@ -289,14 +280,20 @@ Thread _MPCI_Receive_server(
   MPCI_Packet_processor     the_function;
   Thread_Control           *executing;
 
-  executing = _Thread_Executing;
+  executing = _Thread_Get_executing();
 
   for ( ; ; ) {
 
     executing->receive_packet = NULL;
 
     _Thread_Disable_dispatch();
-    _CORE_semaphore_Seize( &_MPCI_Semaphore, 0, true, WATCHDOG_NO_TIMEOUT );
+    _CORE_semaphore_Seize(
+      &_MPCI_Semaphore,
+      executing,
+      0,
+      true,
+      WATCHDOG_NO_TIMEOUT
+    );
     _Thread_Enable_dispatch();
 
     for ( ; ; ) {

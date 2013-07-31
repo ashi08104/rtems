@@ -19,7 +19,10 @@
 #define _RTEMS_SCORE_COREMUTEXIMPL_H
 
 #include <rtems/score/coremutex.h>
-#include <rtems/score/threaddispatch.h>
+#include <rtems/score/chainimpl.h>
+#include <rtems/score/sysstate.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/threadqimpl.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -207,7 +210,10 @@ void _CORE_mutex_Seize_interrupt_blocking(
  *  @retval this method returns true if dispatch is in an unsafe state.
  */
 #ifdef RTEMS_SMP
-  #define _CORE_mutex_Check_dispatch_for_seize(_wait) 0
+  #define _CORE_mutex_Check_dispatch_for_seize(_wait) \
+      (_Thread_Dispatch_get_disable_level() != 1 \
+        && (_wait) \
+        && (_System_state_Get() >= SYSTEM_STATE_BEGIN_MULTITASKING))
 #else
   #define _CORE_mutex_Check_dispatch_for_seize(_wait) \
       (!_Thread_Dispatch_is_enabled() \
@@ -261,12 +267,12 @@ RTEMS_INLINE_ROUTINE void _CORE_mutex_Seize_body(
   if ( _CORE_mutex_Seize_interrupt_trylock( the_mutex, executing, level ) ) {
     if ( !wait ) {
       _ISR_Enable( level );
-      _Thread_Executing->Wait.return_code =
+      executing->Wait.return_code =
         CORE_MUTEX_STATUS_UNSATISFIED_NOWAIT;
     } else {
       _Thread_queue_Enter_critical_section( &the_mutex->Wait_queue );
-      _Thread_Executing->Wait.queue = &the_mutex->Wait_queue;
-      _Thread_Executing->Wait.id = id;
+      executing->Wait.queue = &the_mutex->Wait_queue;
+      executing->Wait.id = id;
       _Thread_Disable_dispatch();
       _ISR_Enable( level );
       _CORE_mutex_Seize_interrupt_blocking( the_mutex, executing, timeout );

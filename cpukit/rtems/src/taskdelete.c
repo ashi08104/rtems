@@ -18,32 +18,24 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/rtems/status.h>
-#include <rtems/rtems/support.h>
-#include <rtems/rtems/modes.h>
-#include <rtems/score/object.h>
-#include <rtems/score/stack.h>
-#include <rtems/score/states.h>
-#include <rtems/rtems/tasks.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/threadq.h>
-#include <rtems/score/tod.h>
-#include <rtems/score/wkspace.h>
-#include <rtems/score/apiext.h>
-#include <rtems/score/sysstate.h>
+#include <rtems/rtems/tasksimpl.h>
 #include <rtems/score/apimutex.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/config.h>
 
 rtems_status_code rtems_task_delete(
   rtems_id id
 )
 {
-#ifdef RTEMS_SMP
-  return rtems_task_suspend( id );
-#else /* RTEMS_SMP */
   register Thread_Control *the_thread;
   Objects_Locations        location;
   Objects_Information     *the_information;
+
+#if defined( RTEMS_SMP )
+  if ( rtems_configuration_is_smp_enabled() ) {
+    return RTEMS_NOT_IMPLEMENTED;
+  }
+#endif
 
   _RTEMS_Lock_allocator();
 
@@ -94,5 +86,4 @@ rtems_status_code rtems_task_delete(
 
   _RTEMS_Unlock_allocator();
   return RTEMS_INVALID_ID;
-#endif /* RTEMS_SMP */
 }

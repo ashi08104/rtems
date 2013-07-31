@@ -18,15 +18,12 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/rtems/status.h>
-#include <rtems/rtems/asr.h>
-#include <rtems/score/isr.h>
-#include <rtems/rtems/modes.h>
 #include <rtems/rtems/signal.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/apiext.h>
+#include <rtems/rtems/asrimpl.h>
 #include <rtems/rtems/tasks.h>
+#include <rtems/score/apiext.h>
+#include <rtems/score/isrlevel.h>
+#include <rtems/score/threaddispatch.h>
 
 static void _RTEMS_signal_Post_switch_hook( Thread_Control *executing )
 {
@@ -79,7 +76,7 @@ rtems_status_code rtems_signal_catch(
   ASR_Information    *asr;
 
 /* XXX normalize mode */
-  executing = _Thread_Executing;
+  executing = _Thread_Get_executing();
   api = (RTEMS_API_Control*)executing->API_Extensions[ THREAD_API_RTEMS ];
   asr = &api->Signal;
 

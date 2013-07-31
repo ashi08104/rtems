@@ -18,13 +18,11 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/rtems/status.h>
 #include <rtems/rtems/clock.h>
-#include <rtems/score/isr.h>
-#include <rtems/score/thread.h>
+#include <rtems/score/schedulerimpl.h>
+#include <rtems/score/threadimpl.h>
 #include <rtems/score/tod.h>
-#include <rtems/score/watchdog.h>
+#include <rtems/score/watchdogimpl.h>
 
 rtems_status_code rtems_clock_tick( void )
 {

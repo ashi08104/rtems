@@ -22,6 +22,10 @@
 #include "malloc_p.h"
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
+
+#include <rtems/score/sysstate.h>
+#include <rtems/score/objectimpl.h>
 
 void *realloc(
   void *ptr,

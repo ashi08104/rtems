@@ -18,11 +18,9 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
+#include <rtems/score/schedulersimpleimpl.h>
 #include <rtems/score/isr.h>
-#include <rtems/score/scheduler.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/schedulersimple.h>
+#include <rtems/score/threadimpl.h>
 
 void _Scheduler_simple_Yield( Thread_Control *thread )
 {

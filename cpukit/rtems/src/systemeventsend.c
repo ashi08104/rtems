@@ -24,8 +24,9 @@
   #include "config.h"
 #endif
 
-#include <rtems/rtems/event.h>
+#include <rtems/rtems/eventimpl.h>
 #include <rtems/rtems/tasks.h>
+#include <rtems/score/threadimpl.h>
 
 rtems_status_code rtems_event_system_send(
   rtems_id        id,

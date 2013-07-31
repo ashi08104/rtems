@@ -21,9 +21,8 @@
 #include <rtems/system.h>
 #include <rtems/score/isr.h>
 #include <rtems/score/coremuteximpl.h>
-#include <rtems/score/states.h>
+#include <rtems/score/schedulerimpl.h>
 #include <rtems/score/thread.h>
-#include <rtems/score/threadq.h>
 
 #if defined(__RTEMS_DO_NOT_INLINE_CORE_MUTEX_SEIZE__)
 void _CORE_mutex_Seize(

@@ -32,6 +32,7 @@
 #include <rtems/posix/pthread.h>
 #include <rtems/posix/sigset.h>
 #include <rtems/score/apiext.h>
+#include <rtems/score/threadq.h>
 
 #define _States_Is_interruptible_signal( _states ) \
   ( ((_states) & \
@@ -58,10 +59,6 @@ extern sigset_t  _POSIX_signals_Pending;
 extern const struct sigaction _POSIX_signals_Default_vectors[ SIG_ARRAY_MAX ];
 
 extern struct sigaction _POSIX_signals_Vectors[ SIG_ARRAY_MAX ];
-
-extern Watchdog_Control _POSIX_signals_Alarm_timer;
-
-extern Watchdog_Control _POSIX_signals_Ualarm_timer;
 
 extern Thread_queue_Control _POSIX_signals_Wait_queue;
 

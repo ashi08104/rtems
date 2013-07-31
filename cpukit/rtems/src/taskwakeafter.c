@@ -18,21 +18,10 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/rtems/status.h>
-#include <rtems/rtems/support.h>
-#include <rtems/rtems/modes.h>
-#include <rtems/score/object.h>
-#include <rtems/score/scheduler.h>
-#include <rtems/score/stack.h>
-#include <rtems/score/states.h>
 #include <rtems/rtems/tasks.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/threadq.h>
-#include <rtems/score/tod.h>
-#include <rtems/score/wkspace.h>
-#include <rtems/score/apiext.h>
-#include <rtems/score/sysstate.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/schedulerimpl.h>
+#include <rtems/score/watchdogimpl.h>
 
 rtems_status_code rtems_task_wake_after(
   rtems_interval ticks

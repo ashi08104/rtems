@@ -18,28 +18,13 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/score/apiext.h>
-#include <rtems/score/context.h>
-#include <rtems/score/interr.h>
-#include <rtems/score/isr.h>
-#include <rtems/score/object.h>
-#include <rtems/score/priority.h>
-#include <rtems/score/states.h>
-#include <rtems/score/sysstate.h>
-#include <rtems/score/thread.h>
 #include <rtems/score/threaddispatch.h>
-#include <rtems/score/threadq.h>
+#include <rtems/score/apiext.h>
+#include <rtems/score/isr.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/tod.h>
 #include <rtems/score/userextimpl.h>
 #include <rtems/score/wkspace.h>
-
-#ifndef __RTEMS_USE_TICKS_FOR_STATISTICS__
-  #include <rtems/score/timestamp.h>
-#endif
-
-#if defined(RTEMS_SMP)
-  #include <rtems/score/smp.h>
-#endif
 
 void _Thread_Dispatch( void )
 {
@@ -80,11 +65,8 @@ void _Thread_Dispatch( void )
      * once someone calls _Thread_Dispatch().
      */
     _Thread_Disable_dispatch();
-
-    /*
-     *  If necessary, send dispatch request to other cores.
-     */
-    _SMP_Request_other_cores_to_dispatch();
+  #else
+    _Thread_Dispatch_set_disable_level( 1 );
   #endif
 
   /*
@@ -97,8 +79,6 @@ void _Thread_Dispatch( void )
     #if defined(RTEMS_SMP)
       executing->is_executing = false;
       heir->is_executing = true;
-    #else
-      _Thread_Dispatch_set_disable_level( 1 );
     #endif
     _Thread_Dispatch_necessary = false;
     _Thread_Executing = heir;

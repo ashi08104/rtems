@@ -27,21 +27,20 @@
 #include <sys/types.h>
 #include <mqueue.h>
 #include <rtems/config.h>
-#include <rtems/score/object.h>
-#include <rtems/posix/barrier.h>
-#include <rtems/posix/cond.h>
+#include <rtems/posix/barrierimpl.h>
+#include <rtems/posix/condimpl.h>
 #include <rtems/posix/config.h>
 #include <rtems/posix/key.h>
-#include <rtems/posix/mqueue.h>
+#include <rtems/posix/mqueueimpl.h>
 #include <rtems/posix/muteximpl.h>
 #include <rtems/posix/posixapi.h>
-#include <rtems/posix/priority.h>
+#include <rtems/posix/priorityimpl.h>
 #include <rtems/posix/psignalimpl.h>
-#include <rtems/posix/pthread.h>
-#include <rtems/posix/rwlock.h>
-#include <rtems/posix/timer.h>
-#include <rtems/posix/semaphore.h>
-#include <rtems/posix/spinlock.h>
+#include <rtems/posix/pthreadimpl.h>
+#include <rtems/posix/rwlockimpl.h>
+#include <rtems/posix/timerimpl.h>
+#include <rtems/posix/semaphoreimpl.h>
+#include <rtems/posix/spinlockimpl.h>
 #include <rtems/posix/time.h>
 
 Objects_Information *_POSIX_Objects[ OBJECTS_POSIX_CLASSES_LAST + 1 ];

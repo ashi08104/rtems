@@ -22,10 +22,8 @@
 #include <rtems/rtems/status.h>
 #include <rtems/rtems/support.h>
 #include <rtems/score/address.h>
-#include <rtems/score/object.h>
-#include <rtems/rtems/part.h>
+#include <rtems/rtems/partimpl.h>
 #include <rtems/score/thread.h>
-#include <rtems/score/sysstate.h>
 
 rtems_status_code rtems_partition_get_buffer(
   rtems_id   id,

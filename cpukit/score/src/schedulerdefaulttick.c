@@ -19,9 +19,8 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/score/scheduler.h>
-#include <rtems/score/thread.h>
+#include <rtems/score/schedulerimpl.h>
+#include <rtems/score/threadimpl.h>
 #include <rtems/score/smp.h>
 
 static void _Scheduler_default_Tick_for_executing( Thread_Control *executing )
@@ -86,8 +85,8 @@ void _Scheduler_default_Tick( void )
   uint32_t processor;
 
   for ( processor = 0 ; processor < processor_count ; ++processor ) {
-    _Scheduler_default_Tick_for_executing(
-      _Per_CPU_Information[ processor ].executing
-    );
+    const Per_CPU_Control *per_cpu = _Per_CPU_Get_by_index( processor );
+
+    _Scheduler_default_Tick_for_executing( per_cpu->executing );
   }
 }

@@ -14,7 +14,7 @@
 #include <tmacros.h>
 
 #include <sys/types.h>
-#include <rtems/score/threadq.h>
+#include <rtems/score/threadqimpl.h>
 
 /* forward declarations to avoid warnings */
 rtems_task Init(rtems_task_argument argument);
@@ -34,7 +34,7 @@ void threadq_first_empty(
   _Thread_queue_Initialize( &tq, discipline, 0x01, 3 );
 
   puts( "Init - _Thread_queue_Extract - thread not blocked on a thread queue" );
-  _Thread_queue_Extract( &tq, _Thread_Executing );
+  _Thread_queue_Extract( &tq, _Thread_Get_executing() );
   /* is there anything to check? */
 }
 

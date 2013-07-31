@@ -18,8 +18,10 @@
   #include "config.h"
 #endif
 
-#include <rtems/rtems/event.h>
+#include <rtems/rtems/eventimpl.h>
 #include <rtems/rtems/tasks.h>
+#include <rtems/score/statesimpl.h>
+#include <rtems/score/threaddispatch.h>
 
 rtems_status_code rtems_event_receive(
   rtems_event_set  event_in,

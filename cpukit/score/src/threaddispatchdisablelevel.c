@@ -20,10 +20,7 @@
 #include <rtems/score/context.h>
 #include <rtems/score/interr.h>
 #include <rtems/score/isr.h>
-#include <rtems/score/object.h>
 #include <rtems/score/priority.h>
-#include <rtems/score/states.h>
-#include <rtems/score/sysstate.h>
 #include <rtems/score/threaddispatch.h>
 
 #define NO_OWNER_CPU 0xffffffffU
@@ -52,7 +49,7 @@ uint32_t _Thread_Dispatch_increment_disable_level( void )
   uint32_t self_cpu;
   uint32_t disable_level;
 
-  _ISR_Disable_on_this_core( isr_level );
+  _ISR_Disable( isr_level );
 
   /*
    * We must obtain the processor ID after interrupts are disabled since a
@@ -72,7 +69,7 @@ uint32_t _Thread_Dispatch_increment_disable_level( void )
   ++disable_level;
   _Thread_Dispatch_disable_level = disable_level;
 
-  _ISR_Enable_on_this_core( isr_level );
+  _ISR_Enable( isr_level );
 
   return disable_level;
 }
@@ -84,7 +81,7 @@ uint32_t _Thread_Dispatch_decrement_disable_level( void )
   ISR_Level isr_level;
   uint32_t disable_level;
 
-  _ISR_Disable_on_this_core( isr_level );
+  _ISR_Disable( isr_level );
 
   disable_level = _Thread_Dispatch_disable_level;
   --disable_level;
@@ -96,7 +93,7 @@ uint32_t _Thread_Dispatch_decrement_disable_level( void )
     _SMP_lock_Release( &level_lock->lock );
   }
 
-  _ISR_Enable_on_this_core( isr_level );
+  _ISR_Enable( isr_level );
 
   return disable_level;
 }

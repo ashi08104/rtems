@@ -25,20 +25,30 @@
 #include <rtems/score/wkspace.h>
 #include <rtems/score/protectedheap.h>
 
+#include <rtems/extensionimpl.h>
+
+#include <rtems/rtems/barrierimpl.h>
+#include <rtems/rtems/dpmemimpl.h>
+#include <rtems/rtems/messageimpl.h>
+#include <rtems/rtems/partimpl.h>
+#include <rtems/rtems/ratemonimpl.h>
+#include <rtems/rtems/regionimpl.h>
 #include <rtems/rtems/semimpl.h>
+#include <rtems/rtems/tasksimpl.h>
+#include <rtems/rtems/timerimpl.h>
 
 #ifdef RTEMS_POSIX_API
-  #include <rtems/posix/barrier.h>
-  #include <rtems/posix/cond.h>
-  #include <rtems/posix/mqueue.h>
+  #include <rtems/posix/barrierimpl.h>
+  #include <rtems/posix/condimpl.h>
+  #include <rtems/posix/mqueueimpl.h>
   #include <rtems/posix/muteximpl.h>
   #include <rtems/posix/key.h>
   #include <rtems/posix/psignal.h>
-  #include <rtems/posix/pthread.h>
-  #include <rtems/posix/rwlock.h>
-  #include <rtems/posix/semaphore.h>
-  #include <rtems/posix/spinlock.h>
-  #include <rtems/posix/timer.h>
+  #include <rtems/posix/pthreadimpl.h>
+  #include <rtems/posix/rwlockimpl.h>
+  #include <rtems/posix/semaphoreimpl.h>
+  #include <rtems/posix/spinlockimpl.h>
+  #include <rtems/posix/timerimpl.h>
 #endif
 
 static const Objects_Information *objects_info_table[] = {

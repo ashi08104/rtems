@@ -29,7 +29,8 @@
 #include <rtems/score/thread.h>
 #include <rtems/posix/sigset.h>
 #include <rtems/posix/time.h>
-#include <rtems/posix/timer.h>
+#include <rtems/posix/timerimpl.h>
+#include <rtems/score/watchdogimpl.h>
 
 int timer_create(
   clockid_t        clock_id,

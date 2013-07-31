@@ -24,12 +24,13 @@
 #include <pthread.h>
 #include <errno.h>
 
-#include <rtems/system.h>
-#include <rtems/score/thread.h>
-#include <rtems/posix/pthread.h>
-#include <rtems/posix/priority.h>
+#include <rtems/posix/priorityimpl.h>
+#include <rtems/posix/pthreadimpl.h>
 #include <rtems/posix/time.h>
+#include <rtems/score/threadimpl.h>
 #include <rtems/score/apimutex.h>
+#include <rtems/score/stackimpl.h>
+#include <rtems/score/watchdogimpl.h>
 
 static inline size_t _POSIX_Threads_Ensure_minimum_stack (
   size_t size
@@ -94,7 +95,7 @@ int pthread_create(
    */
   switch ( the_attr->inheritsched ) {
     case PTHREAD_INHERIT_SCHED:
-      api = _Thread_Executing->API_Extensions[ THREAD_API_POSIX ];
+      api = _Thread_Get_executing()->API_Extensions[ THREAD_API_POSIX ];
       schedpolicy = api->schedpolicy;
       schedparam  = api->schedparam;
       break;

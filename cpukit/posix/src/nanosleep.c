@@ -21,14 +21,11 @@
 #include <time.h>
 #include <errno.h>
 
-#include <rtems/system.h>
-#include <rtems/score/isr.h>
-#include <rtems/score/scheduler.h>
-#include <rtems/score/thread.h>
-#include <rtems/score/tod.h>
-
 #include <rtems/seterr.h>
+#include <rtems/score/schedulerimpl.h>
+#include <rtems/score/threadimpl.h>
 #include <rtems/score/timespec.h>
+#include <rtems/score/watchdogimpl.h>
 
 /*
  *  14.2.5 High Resolution Sleep, P1003.1b-1993, p. 269

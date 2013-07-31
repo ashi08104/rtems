@@ -19,13 +19,11 @@
 #endif
 
 #include <pthread.h>
-#include <errno.h>
 
-#include <rtems/system.h>
+#include <rtems/posix/pthreadimpl.h>
 #include <rtems/score/apimutex.h>
-#include <rtems/score/thread.h>
-#include <rtems/posix/pthread.h>
-
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/threadqimpl.h>
 
 void _POSIX_Thread_Exit(
   Thread_Control *the_thread,
@@ -97,5 +95,5 @@ void pthread_exit(
   void  *value_ptr
 )
 {
-  _POSIX_Thread_Exit( _Thread_Executing, value_ptr );
+  _POSIX_Thread_Exit( _Thread_Get_executing(), value_ptr );
 }

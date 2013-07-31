@@ -26,12 +26,14 @@
 #include <rtems/config.h>
 #include <rtems/score/apiext.h>
 #include <rtems/score/stack.h>
-#include <rtems/score/thread.h>
+#include <rtems/score/threadimpl.h>
+#include <rtems/score/threadqimpl.h>
 #include <rtems/score/userextimpl.h>
+#include <rtems/score/watchdogimpl.h>
 #include <rtems/score/wkspace.h>
 #include <rtems/posix/cancel.h>
-#include <rtems/posix/pthread.h>
-#include <rtems/posix/priority.h>
+#include <rtems/posix/pthreadimpl.h>
+#include <rtems/posix/priorityimpl.h>
 #include <rtems/posix/psignalimpl.h>
 #include <rtems/posix/config.h>
 #include <rtems/posix/key.h>

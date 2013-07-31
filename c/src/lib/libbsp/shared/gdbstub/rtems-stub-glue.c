@@ -29,6 +29,8 @@
  */
 
 #include <rtems.h>
+#include <rtems/score/sysstate.h>
+#include <rtems/score/objectimpl.h>
 #include <string.h>
 
 #include "gdb_if.h"

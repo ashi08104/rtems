@@ -55,6 +55,7 @@
 
 #include <bsp/apic.h>
 #include <bsp/smp-imps.h>
+#include <bsp/irq.h>
 
 /*
  *  XXXXX  The following absolutely must be defined!!!
@@ -79,6 +80,7 @@
 #include <rtems/bspsmp.h>
 #include <rtems/bspIo.h>
 #include <libcpu/cpu.h>
+#include <assert.h>
 
 extern void _pc386_delay(void);
 
@@ -120,14 +122,14 @@ static void UDELAY(int x)
   while ( _i-- )
     _pc386_delay();
 }
- 
+
 #define READ_MSR_LO(_x) \
   (unsigned int)(read_msr(_x) & 0xffffffff)
 
 static inline unsigned long long read_msr(unsigned int msr)
 {
   unsigned long long value;
- 
+
   asm volatile("rdmsr" : "=A" (value) : "c" (msr));
   return value;
 }
@@ -241,11 +243,11 @@ send_ipi(unsigned int dst, unsigned int v)
  *  This must be modified to perform whatever OS-specific initialization
  *  that is required.
  */
-int
+static int
 boot_cpu(imps_processor *proc)
 {
   int apicid = proc->apic_id, success = 1;
-  unsigned bootaddr, accept_status;
+  unsigned bootaddr;
   unsigned bios_reset_vector = PHYS_TO_VIRTUAL(BIOS_RESET_VECTOR);
 
   /*
@@ -268,7 +270,7 @@ boot_cpu(imps_processor *proc)
   );
 
   reset[1] = (uint32_t)secondary_cpu_initialize;
-  reset[2] = (uint32_t)_Per_CPU_Information[apicid].interrupt_stack_high;
+  reset[2] = (uint32_t)_Per_CPU_Get_by_index(apicid)->interrupt_stack_high;
 
   /*
    *  Generic CPU startup sequence starts here.
@@ -280,7 +282,7 @@ boot_cpu(imps_processor *proc)
 
   /* clear the APIC error register */
   IMPS_LAPIC_WRITE(LAPIC_ESR, 0);
-  accept_status = IMPS_LAPIC_READ(LAPIC_ESR);
+  IMPS_LAPIC_READ(LAPIC_ESR);
 
   /* assert INIT IPI */
   send_ipi(
@@ -312,7 +314,7 @@ boot_cpu(imps_processor *proc)
 
   /* clear the APIC error register */
   IMPS_LAPIC_WRITE(LAPIC_ESR, 0);
-  accept_status = IMPS_LAPIC_READ(LAPIC_ESR);
+  IMPS_LAPIC_READ(LAPIC_ESR);
 
   /* clean up BIOS reset vector */
   CMOS_WRITE_BYTE(CMOS_RESET_CODE, 0);
@@ -385,7 +387,7 @@ imps_read_config_table(unsigned start, int count)
     case IMPS_BCT_PROCESSOR:
       if ( imps_num_cpus < rtems_configuration_get_maximum_processors() ) {
 	add_processor((imps_processor *)start);
-      } else 
+      } else
         imps_num_cpus++;
       start += 12;  /* 20 total */
       break;
@@ -679,7 +681,7 @@ imps_force(int ncpus)
  *
  *  Function finished.
  */
-int
+static int
 imps_probe(void)
 {
   /*
@@ -734,39 +736,33 @@ imps_probe(void)
 /*
  *  RTEMS SMP BSP Support
  */
-void smp_apic_ack(void)
+static void smp_apic_ack(void)
 {
   (void) IMPS_LAPIC_READ(LAPIC_SPIV);  /* dummy read */
   IMPS_LAPIC_WRITE(LAPIC_EOI, 0 );     /* ACK the interrupt */
 }
 
-rtems_isr ap_ipi_isr(
-  rtems_vector_number vector
-)
+static void ap_ipi_isr(void *arg)
 {
+  (void) arg;
+
   smp_apic_ack();
 
   rtems_smp_process_interrupt();
 }
 
-#include <rtems/irq.h>
-
-static rtems_irq_connect_data apIPIIrqData = {
-  16,
-  (void *)ap_ipi_isr,
-  0,
-  NULL,            /* On */
-  NULL,            /* Off */
-  NULL,            /* IsOn */
-};
-
-extern void bsp_reset(void);
-void ipi_install_irq(void)
+static void ipi_install_irq(void)
 {
-  if (!BSP_install_rtems_irq_handler (&apIPIIrqData)) {
-    printk("Unable to initialize IPI\n");
-    bsp_reset();
-  }
+  rtems_status_code status;
+
+  status = rtems_interrupt_handler_install(
+    16,
+    "smp-imps",
+    RTEMS_INTERRUPT_UNIQUE,
+    ap_ipi_isr,
+    NULL
+  );
+  assert(status == RTEMS_SUCCESSFUL);
 }
 
 #ifdef __SSE__

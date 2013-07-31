@@ -29,13 +29,13 @@
 #include <rtems/system.h>
 #include <rtems/score/watchdog.h>
 #include <rtems/seterr.h>
-#include <rtems/posix/mqueue.h>
+#include <rtems/posix/mqueueimpl.h>
 #include <rtems/posix/time.h>
 
 int mq_setattr(
   mqd_t                 mqdes,
-  const struct mq_attr *mqstat,
-  struct mq_attr       *omqstat
+  const struct mq_attr *__restrict mqstat,
+  struct mq_attr       *__restrict omqstat
 )
 {
   POSIX_Message_queue_Control_fd *the_mq_fd;

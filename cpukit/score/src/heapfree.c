@@ -19,8 +19,8 @@
 #include "config.h"
 #endif
 
-#include <rtems/system.h>
-#include <rtems/score/heap.h>
+#include <rtems/score/heapimpl.h>
+#include <rtems/score/threadimpl.h>
 
 #ifndef HEAP_PROTECTION
   #define _Heap_Protection_determine_block_free( heap, block ) true
@@ -39,7 +39,7 @@
     uintptr_t *current = NULL;
 
     block->Protection_begin.next_delayed_free_block = block;
-    block->Protection_begin.task = _Thread_Executing;
+    block->Protection_begin.task = _Thread_Get_executing();
 
     if ( delayed_free_block_count > 0 ) {
       Heap_Block *const last = heap->Protection.last_delayed_free_block;

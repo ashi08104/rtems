@@ -3405,7 +3405,7 @@ Defined or undefined.
 
 @item DEFAULT VALUE:
 This is defined by default.
-This is the default scheduler and specifying this 
+This is the default scheduler and specifying this
 configuration parameter is redundant.
 
 @end table
@@ -3657,7 +3657,7 @@ Boolean feature macro.
 Defined or undefined.
 
 @item DEFAULT VALUE:
-This is not defined by default.
+The default value is 1, (if CONFIGURE_SMP_APPLICATION is defined).
 
 @end table
 
@@ -3680,13 +3680,13 @@ None.
 @code{CONFIGURE_SMP_MAXIMUM_PROCESSORS}
 
 @item DATA TYPE:
-Boolean feature macro.
+Unsigned integer (@code{uint32_t}).
 
 @item RANGE:
 Defined or undefined.
 
 @item DEFAULT VALUE:
-This is not defined by default.
+The default value is 1, (if CONFIGURE_SMP_APPLICATION is defined).
 
 @end table
 
@@ -3730,7 +3730,7 @@ List of device driver initializers (@code{rtems_driver_address_table}).
 Undefined or array of device drivers.
 
 @item DEFAULT VALUE:
-This is not defined default, indicating the @code{<rtems/confdefs.h>}
+This is not defined by default, indicating the @code{<rtems/confdefs.h>}
 is providing the device driver table.
 
 @end table
@@ -3763,7 +3763,7 @@ Unsigned integer (@code{uint32_t}).
 Zero or positive.
 
 @item DEFAULT VALUE:
-This is computed by default, and is set to the number of device drivers 
+This is computed by default, and is set to the number of device drivers
 configured using the @code{CONFIGURE_APPLICATIONS_NEEDS_XXX_DRIVER}
 configuration parameters.
 
@@ -3798,9 +3798,8 @@ Unsigned integer (@code{uint32_t}).
 Positive.
 
 @item DEFAULT VALUE:
-Unless @code{BSP_MAXIMUM_DEVICES} is set by the BSP, the default value
-for this is set to 4.  If overridden by the BSP the value is set to the
-value specified by the BSP.
+If @code{BSP_MAXIMUM_DEVICES} is defined, then the
+default value is @code{BSP_MAXIMUM_DEVICES}, otherwise the default value is 4.
 
 @end table
 
@@ -4304,7 +4303,7 @@ Unsigned integer (@code{uint32_t}).
 Positive.
 
 @item DEFAULT VALUE:
-The default is 2.
+The default value is 2.
 
 @end table
 
@@ -4510,7 +4509,8 @@ Unsigned integer (@code{uint32_t}).
 Undefined or positive.
 
 @item DEFAULT VALUE:
-By default, when @code{CONFIGURE_GNAT_RTEMS} is defined, this is set to 20.
+If @code{CONFIGURE_GNAT_RTEMS} is defined, then the
+default value is 20, otherwise the default value is 0.
 
 @end table
 
@@ -4530,7 +4530,7 @@ None.
 
 @table @b
 @item CONSTANT:
-@findex CONFIGURE_MAXIMUM_FAKE_ADA_TASKS
+@findex @code{CONFIGURE_MAXIMUM_FAKE_ADA_TASKS}
 
 @item DATA TYPE:
 Unsigned integer (@code{uint32_t}).
@@ -4539,7 +4539,7 @@ Unsigned integer (@code{uint32_t}).
 Zero or positive.
 
 @item DEFAULT VALUE:
-This is not defined by default, which implies zero (0) @i{fake} Ada Tasks.
+The default value is 0.
 
 @end table
 
@@ -4551,6 +4551,98 @@ uses the Ada run-time.
 
 @subheading NOTES:
 None.
+
+@c
+@c === Go Tasks ===
+@c
+@section Go Tasks
+
+@c
+@c === CONFIGURE_ENABLE_GO ===
+@c
+@subsection Specify Application Includes Go Code
+
+@findex CONFIGURE_ENABLE_GO
+
+@table @b
+@item CONSTANT:
+@code{CONFIGURE_ENABLE_GO}
+
+@item DATA TYPE:
+Boolean feature macro.
+
+@item RANGE:
+Defined or undefined.
+
+@item DEFAULT VALUE:
+This is not defined by default.
+
+@end table
+
+@subheading DESCRIPTION:
+@code{CONFIGURE_ENABLE_GO} is defined to inform RTEMS that the Go
+run-time is to be used by the application.
+
+@subheading NOTES:
+The Go language support is experimental
+
+@c
+@c === CONFIGURE_MAXIMUM_GOROUTINES ===
+@c
+@subsection Specify the maximum number of Go routines
+
+@findex CONFIGURE_MAXIMUM_GOROUTINES
+
+@table @b
+@item CONSTANT:
+@code{CONFIGURE_MAXIMUM_GOROUTINES}
+
+@item DATA TYPE:
+Unsigned integer (@code{uint32_t}).
+
+@item RANGE:
+Zero or positive.
+
+@item DEFAULT VALUE:
+The default value is 400
+
+@end table
+
+@subheading DESCRIPTION:
+@code{CONFIGURE_MAXIMUM_GOROUTINES} is defined to specify the maximum number of
+Go routines.
+
+@subheading NOTES:
+The Go language support is experimental
+
+@c
+@c === CONFIGURE_MAXIMUM_GO_CHANNELS ===
+@c
+@subsection Specify the maximum number of Go Channels
+
+@findex CONFIGURE_MAXIMUM_GO_CHANNELS
+
+@table @b
+@item CONSTANT:
+@code{CONFIGURE_MAXIMUM_GO_CHANNELS}
+
+@item DATA TYPE:
+Unsigned integer (@code{uint32_t}).
+
+@item RANGE:
+Zero or positive.
+
+@item DEFAULT VALUE:
+The default value is 500
+
+@end table
+
+@subheading DESCRIPTION:
+@code{CONFIGURE_MAXIMUM_GO_CHANNELS} is defined to specify the maximum number
+of Go channels.
+
+@subheading NOTES:
+The Go language support is experimental
 
 @c
 @c === Configuration Data Structures ===

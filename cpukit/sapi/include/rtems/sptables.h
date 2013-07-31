@@ -29,14 +29,12 @@ extern "C" {
 #include <rtems/fatal.h>
 #include <rtems/init.h>
 #include <rtems/io.h>
-#include <rtems/score/sysstate.h>
 
 #include <rtems/rtems/intr.h>
 #include <rtems/rtems/clock.h>
 #include <rtems/rtems/tasks.h>
 #include <rtems/rtems/dpmem.h>
 #include <rtems/rtems/event.h>
-#include <rtems/rtems/message.h>
 #if defined(RTEMS_MULTIPROCESSING)
 #include <rtems/rtems/mp.h>
 #endif
