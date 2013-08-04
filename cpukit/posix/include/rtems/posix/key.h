@@ -38,11 +38,6 @@ extern "C" {
 #endif
 
 /**
- * Forward declaretion
- */
-typedef struct POSIX_Keys_Freechain_node_struct POSIX_Keys_Freechain_node;
-
-/**
  * @brief The rbtree node used to manage a POSIX key and value.
  */
 typedef struct {
@@ -50,8 +45,6 @@ typedef struct {
   Chain_Node Key_values_per_thread_node;
   /** This field is the rbtree node structure. */
   RBTree_Node Key_value_lookup_node;
-  /** This field points to parent freechain node */
-  POSIX_Keys_Freechain_node *fc_node_ptr;
   /** This field is the POSIX key used as an rbtree key */
   pthread_key_t key;
   /** This field is the Thread id also used as an rbtree key */
@@ -67,14 +60,6 @@ typedef struct {
     Freechain_Control super_fc;
     size_t bump_count;
 } POSIX_Keys_Freechain;
-
-/**
- * @brief POSIX_Keys_Freechain_node is freechain node
- */
-struct POSIX_Keys_Freechain_node_struct {
-  Chain_Node ch_node;
-  POSIX_Keys_Key_value_pair rb_node;
-};
 
 /**
  * @brief The data structure used to manage a POSIX key.

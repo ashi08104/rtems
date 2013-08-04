@@ -104,14 +104,14 @@ void _POSIX_Keys_Freechain_init(Freechain_Control *freechain)
   POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
   psx_freechain_p->bump_count =
     Configuration_POSIX_API.maximum_key_value_pairs & 0x7FFFFFFF;
-  size_t size = psx_freechain_p->bump_count * sizeof(POSIX_Keys_Freechain_node);
-  POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
+  size_t size = psx_freechain_p->bump_count * sizeof(POSIX_Keys_Key_value_pair);
+  POSIX_Keys_Key_value_pair *nodes = _Workspace_Allocate(size);
 
   _Chain_Initialize(
                     &freechain->Freechain,
                     nodes,
                     psx_freechain_p->bump_count,
-                    sizeof(POSIX_Keys_Freechain_node)
+                    sizeof(POSIX_Keys_Key_value_pair)
                     );
 }
 
@@ -121,10 +121,10 @@ void _POSIX_Keys_Freechain_init(Freechain_Control *freechain)
 bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain)
 {
   POSIX_Keys_Freechain *psx_freechain_p = (POSIX_Keys_Freechain *)freechain;
-  size_t node_size = sizeof(POSIX_Keys_Freechain_node);
+  size_t node_size = sizeof(POSIX_Keys_Key_value_pair);
   size_t size = psx_freechain_p->bump_count * node_size;
   int i;
-  POSIX_Keys_Freechain_node *nodes = _Workspace_Allocate(size);
+  POSIX_Keys_Key_value_pair *nodes = _Workspace_Allocate(size);
 
   if (!nodes)
     return false;

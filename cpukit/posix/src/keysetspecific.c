@@ -42,30 +42,27 @@ int pthread_setspecific(
 )
 {
   Objects_Locations            location;
-  POSIX_Keys_Key_value_pair      *rb_node_ptr;
-  POSIX_Keys_Freechain_node   *fc_node_ptr;
+  POSIX_Keys_Key_value_pair   *value_pair_ptr;
   POSIX_API_Control           *api;
 
   _POSIX_Keys_Get( key, &location );
   switch ( location ) {
 
     case OBJECTS_LOCAL:
-      fc_node_ptr = ( POSIX_Keys_Freechain_node * )
-        _Freechain_Get( (Freechain_Control *)&_POSIX_Keys_Keypool );
-      if ( !fc_node_ptr ) {
+      value_pair_ptr = ( POSIX_Keys_Key_value_pair * )
+        _Freechain_Get( &_POSIX_Keys_Keypool.super_fc );
+      if ( !value_pair_ptr ) {
         _Thread_Enable_dispatch();
         return ENOMEM;
       }
 
-      rb_node_ptr = &fc_node_ptr->rb_node;
-      rb_node_ptr->fc_node_ptr = fc_node_ptr;
-      rb_node_ptr->key = key;
-      rb_node_ptr->thread_id = _Thread_Executing->Object.id;
-      rb_node_ptr->value = value;
+      value_pair_ptr->key = key;
+      value_pair_ptr->thread_id = _Thread_Executing->Object.id;
+      value_pair_ptr->value = value;
       if ( _RBTree_Insert_unprotected( &_POSIX_Keys_Key_value_lookup_tree,
-                                       &(rb_node_ptr->Key_value_lookup_node) ) ) {
+                                       &(value_pair_ptr->Key_value_lookup_node) ) ) {
         _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
-                        (void *) fc_node_ptr );
+                        (void *) value_pair_ptr );
         _Thread_Enable_dispatch();
         return EAGAIN;
       }
@@ -73,7 +70,7 @@ int pthread_setspecific(
       /** append rb_node to the thread API extension's chain */
       api = (POSIX_API_Control *)\
        (_Thread_Executing->API_Extensions[THREAD_API_POSIX]);
-      _Chain_Append_unprotected( &api->Key_Chain, &rb_node_ptr->Key_values_per_thread_node );
+      _Chain_Append_unprotected( &api->Key_Chain, &value_pair_ptr->Key_values_per_thread_node );
 
       _Thread_Enable_dispatch();
       return 0;
