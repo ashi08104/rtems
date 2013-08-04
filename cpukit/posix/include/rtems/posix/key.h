@@ -94,7 +94,7 @@ POSIX_EXTERN Objects_Information  _POSIX_Keys_Information;
 /**
  * @brief The rbtree control block used to manage all key values
  */
-POSIX_EXTERN RBTree_Control _POSIX_Keys_Rbtree;
+POSIX_EXTERN RBTree_Control _POSIX_Keys_Key_value_lookup_tree;
 
 /**
  * @brief This freechain is used as a memory pool for POSIX_Keys_Key_value_pair.
@@ -109,11 +109,19 @@ POSIX_EXTERN POSIX_Keys_Freechain _POSIX_Keys_Keypool;
 void _POSIX_Key_Manager_initialization(void);
 
 /**
+ * @brief POSIX key Freechain extend handle
+ *
+ * This routine extend freechain node, which is called in freechain_get
+ * automatically.
+ */
+bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain);
+
+/**
  * @brief POSIX keys Red-Black tree node comparison.
  *
  * This routine compares the rbtree node
  */
-int _POSIX_Keys_Rbtree_compare_function(
+int _POSIX_Keys_Key_value_lookup_tree_compare_function(
   const RBTree_Node *node1,
   const RBTree_Node *node2
 );

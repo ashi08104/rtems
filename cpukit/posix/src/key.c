@@ -36,7 +36,6 @@
 
 /* forward declarations to avoid warnings */
 void _POSIX_Keys_Keypool_init(void);
-bool _POSIX_Keys_Freechain_extend(Freechain_Control *freechain);
 void _POSIX_Keys_Freechain_init(Freechain_Control *freechain);
 
 /**
@@ -55,7 +54,7 @@ void _POSIX_Keys_Freechain_init(Freechain_Control *freechain);
  * impossible
  */
 
-int _POSIX_Keys_Rbtree_compare_function(
+int _POSIX_Keys_Key_value_lookup_tree_compare_function(
   const RBTree_Node *node1,
   const RBTree_Node *node2
 )
@@ -160,8 +159,8 @@ void _POSIX_Key_Manager_initialization(void)
   );
 
   _RBTree_Initialize_empty(
-      &_POSIX_Keys_Rbtree,
-      _POSIX_Keys_Rbtree_compare_function,
+      &_POSIX_Keys_Key_value_lookup_tree,
+      _POSIX_Keys_Key_value_lookup_tree_compare_function,
       true
   );
 

@@ -50,7 +50,7 @@ void *pthread_getspecific(
     case OBJECTS_LOCAL:
       search_node.key = key;
       search_node.thread_id = _Thread_Executing->Object.id;
-      p = _RBTree_Find_unprotected( &_POSIX_Keys_Rbtree,
+      p = _RBTree_Find_unprotected( &_POSIX_Keys_Key_value_lookup_tree,
                                     &search_node.Key_value_lookup_node );
       key_data = NULL;
       if ( p ) {

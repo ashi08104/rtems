@@ -62,7 +62,7 @@ void _POSIX_Keys_Run_destructors(
      * structure.
      */
     _RBTree_Extract_unprotected(
-        &_POSIX_Keys_Rbtree,
+        &_POSIX_Keys_Key_value_lookup_tree,
         &((POSIX_Keys_Key_value_pair *)iter)->Key_value_lookup_node
     );
     _Chain_Extract_unprotected( iter );

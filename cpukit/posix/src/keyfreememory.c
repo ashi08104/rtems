@@ -35,7 +35,7 @@ void _POSIX_Keys_Free_memory(
 
   search_node.key = the_key->Object.id;
   search_node.thread_id = 0;
-  iter = _RBTree_Find_unprotected( &_POSIX_Keys_Rbtree, &search_node.Key_value_lookup_node );
+  iter = _RBTree_Find_unprotected( &_POSIX_Keys_Key_value_lookup_tree, &search_node.Key_value_lookup_node );
   if ( !iter )
     return;
   /**
@@ -55,11 +55,11 @@ void _POSIX_Keys_Free_memory(
   p = _RBTree_Container_of( iter, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   while ( p->key == the_key->Object.id ) {
     next = _RBTree_Next_unprotected( iter, RBT_RIGHT );
-    _RBTree_Extract_unprotected( &_POSIX_Keys_Rbtree, iter );
+    _RBTree_Extract_unprotected( &_POSIX_Keys_Key_value_lookup_tree, iter );
     _Chain_Extract_unprotected( &p->Key_values_per_thread_node );
     /* append the node to _POSIX_Keys_Keypool */
-    _Freechain_Put( (Freechain_Control *)&_POSIX_Keys_Keypool,
-                       ( void * ) p->fc_node_ptr);
+    _Freechain_Put( &_POSIX_Keys_Keypool.super_fc,
+                    ( void * ) p->fc_node_ptr);
     iter = next;
     p = _RBTree_Container_of( iter, POSIX_Keys_Key_value_pair, Key_value_lookup_node );
   }
